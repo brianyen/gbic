@@ -1,0 +1,58 @@
+<html>
+<body id="a">
+<div id="title">
+	<h1>GBIC</h1>
+</div>
+	
+<div id="search">
+	<input id="input"></input>
+	<button onClick = "run()">Go</button>
+	
+	<div id="bar"></div>
+</div>
+
+<div id="prev">
+	<p id="test"></p>
+	<img src="https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png" alt="placeholder image">
+</div>
+
+<script>
+var inputEl = document.getElementById("input")
+var displayEl = document.getElementById("test")
+
+function run() {
+	displayEl.innerHTML = inputEl.value
+}
+
+</script>
+
+</body>
+<style>
+#title {
+	text-align: center;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	padding: 1px;
+	font-size: 40px;
+	background-color: rgb(185, 185, 255);
+}
+#search {
+	text-align: center;
+	margin-top: 100px;
+}
+#input {
+	width: 250px;
+}
+#a {
+	margin: 0px;
+}
+#bar {
+	border-top: 3px solid rgb(200, 200, 200);
+	padding: 0px;
+	margin: 50px;
+	height: 0px;
+}
+#prev {
+	text-align: center;
+}
+</style>
+</html>
