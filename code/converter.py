@@ -10,7 +10,6 @@ def main(url):
         print(temp_dir.name)
         convert_to_mp4(url, temp_dir)
         timestamps = get_iframes_ts()
-        print(timestamps)
         return 
     else:
         return
@@ -19,7 +18,10 @@ def convert_to_mp4(url, temp_dir):
     #downloads video mp4 for ffmpeg
     stream = os.popen('../.././youtube-dlc -o "' + temp_dir.name + '/vid.mp4" --write-auto-sub --sub-format json3 -f mp4 ' + url)
     output = stream.read()
-    print(output)
+    with open(temp_dir.name + '/vid.en.json3', 'r') as f:
+        data = f.read()
+    print('---------')
+    print(data)
     return output
 
 def get_iframes_ts():
