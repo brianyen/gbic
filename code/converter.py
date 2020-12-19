@@ -9,7 +9,8 @@ def main(url):
         temp_dir = tempfile.TemporaryDirectory()
         print(temp_dir.name)
         convert_to_mp4(url, temp_dir)
-        get_iframes_ts()
+        timestamps = get_iframes_ts()
+        print(timestamps)
         return 
     else:
         return
@@ -24,9 +25,13 @@ def convert_to_mp4(url, temp_dir):
 def get_iframes_ts():
     stream = os.popen('ffprobe -show_frames -of json -f lavfi "movie=test-iframes/radix.mp4,select=gt(scene\\,0.1)"')
     output = stream.read()
-    json = output[output.index("{"):]
-    print('----------')
-    print(json)
+    metadata = output[output.index("{"):]
+    metadata_dict = json.loads(metadata)
+    timestamps = []
+
+    for frame in metadata_dict['frames']:
+        timestamps.append(float(frame.get('best_effort_timestamp_time')))
+    return timestamps
 
 def verify_url(url):
     return True
