@@ -25,6 +25,7 @@ def convert_to_mp4(url, temp_dir):
     return output
 
 def get_iframes(temp_dir, timestamps):
+    #change min_frame_diff based on video runtime
     min_frame_diff = 5
     last_ts = -math.inf
     frames = []
