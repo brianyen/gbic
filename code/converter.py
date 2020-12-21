@@ -48,8 +48,7 @@ def get_subtitles_with_ts(temp_dir):
             "sentence": sentence
         }
         captions_with_ts.append(line)
-    print('---------')
-    print(captions_with_ts)
+    return captions_with_ts
 
 def verify_url(url):
     return True
