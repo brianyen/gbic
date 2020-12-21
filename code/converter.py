@@ -44,13 +44,18 @@ def get_subtitles_with_ts(temp_dir):
             for word in event['segs']:
                 sentence = sentence + word.get('utf8')
         line = {
-            "timestamp": event.get('tStartMs'),
+            "timestamp": convert_ms_to_s(event.get('tStartMs')),
             "sentence": sentence
         }
-        captions_with_ts.append(line)
+        if line['sentence'] != '\n' and len(line['sentence']) > 0:
+            captions_with_ts.append(line)
+    print(captions_with_ts)
     return captions_with_ts
 
 def verify_url(url):
     return True
+
+def convert_ms_to_s(x):
+    return x / 1000.0
 
 main("https://www.youtube.com/watch?v=gDqLFijKsfw")
