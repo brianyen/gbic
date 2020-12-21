@@ -1,34 +1,107 @@
 
 from jinja2 import Template
+import json
 
+#with open('data.json') as f:
+#	info_json = f.read()
+#info_dict = json.loads(f)
+
+#with open('data.json') as f:
+#    info_json = f.read()
+#info_dict = json.loads(info_json)
+
+class text11:
+	ts = "00:00"
+	text = "1-1"
+
+class text12:
+	ts = "00:01"
+	text = "1-2"
+
+class text13:
+	ts = "00:01.1"
+	text = "1-3"
+
+class text14:
+	ts = "00:01.2"
+	text = "1-4"
+
+class text15:
+	ts = "00:01.3"
+	text = "1-5"
+
+class text16:
+	ts = "00:01.4"
+	text = "1-6"
+
+class text17:
+	ts = "00:01.5"
+	text = "1-7"
+
+class text18:
+	ts = "00:01.6"
+	text = "1-8"
+
+class text19:
+	ts = "00:01.7"
+	text = "1-9"
+
+class text110:
+	ts = "00:01.8"
+	text = "1-10"
+
+
+class text21:
+	ts = "00:02"
+	text = "2-1"
+
+class text22:
+	ts = "00:03"
+	text = "2-2"
+
+class text31:
+	ts = "00:04"
+	text = "3-1"
+
+class text32:
+	ts = "00:05"
+	text = "3-2"
+
+	
 class slide1:
 	img = "https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png"
-	ts = "4:30"
-	text = "hello hello"
+	text = [text11, text12, text13, text14, text15, text16, text17, text18, text19, text110]
 	
 class slide2:
 	img = "https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png"
-	ts = "4:31"
-	text = "goodbye goodbye"
+	text = [text21, text22]
 	
 class slide3:
 	img = "https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png"
-	ts = "YESSSS"
-	text = " hnghugh"
-
+	text = [text31, text32]
+	
 slides = [slide1, slide2, slide3]
 
-def groups():
+
+
+def paragraph(slide):
+	i = ""
+	for line in slide.text:
+		i = i + "<p class='paragraph'>" + line.ts + ": " + line.text + "</p>"
+	return i	
+
+def groups(slides):
+	v = ""
 	for slide in slides:
-		print("""<div class="group">
-			<div class="column">
-				<img class="slide" src=""" + slide.img + """ alt="placeholder image">
-			</div>
-			<div class="column">
-				<p class="paragraph">""" + slide.ts + """</p>
-				<p class="paragraph">""" + slide.text + """</p>
-			</div>
-		</div>""")
+		v = v + """<div class="group">
+				<div class="column">
+					<img class="slide" src=""" + slide.img + """ alt="placeholder image">
+				</div>
+				<div class="column">
+					""" + paragraph(slide) + """
+				</div>
+			</div>"""
+	return v
 	
 
 h = """<!DOCTYPE html>
@@ -110,4 +183,4 @@ div.column {
 
 t = Template(h)
 
-print(t.render(a="https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png", insides=groups()))
+print(t.render(a="https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png", insides=groups(slides)))
