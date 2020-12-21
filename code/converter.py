@@ -10,6 +10,7 @@ def main(url):
         print(temp_dir.name)
         convert_to_mp4(url, temp_dir)
         timestamps = get_iframes_ts()
+        subtitles = get_subtitles_with_ts(temp_dir)
         return 
     else:
         return
@@ -18,10 +19,6 @@ def convert_to_mp4(url, temp_dir):
     #downloads video mp4 for ffmpeg
     stream = os.popen('../.././youtube-dlc -o "' + temp_dir.name + '/vid.mp4" --write-auto-sub --sub-format json3 -f mp4 ' + url)
     output = stream.read()
-    with open(temp_dir.name + '/vid.en.json3', 'r') as f:
-        data = f.read()
-    print('---------')
-    print(data)
     return output
 
 def get_iframes_ts():
@@ -34,6 +31,25 @@ def get_iframes_ts():
     for frame in metadata_dict['frames']:
         timestamps.append(float(frame.get('best_effort_timestamp_time')))
     return timestamps
+
+def get_subtitles_with_ts(temp_dir):
+    with open(temp_dir.name + '/vid.en.json3', 'r') as f:
+        caption_json = f.read()
+    caption_dict = json.loads(caption_json)
+
+    captions_with_ts = []
+    for event in caption_dict['events']:
+        sentence = ""
+        if "segs" in event:
+            for word in event['segs']:
+                sentence = sentence + word.get('utf8')
+        line = {
+            "timestamp": event.get('tStartMs'),
+            "sentence": sentence
+        }
+        captions_with_ts.append(line)
+    print('---------')
+    print(captions_with_ts)
 
 def verify_url(url):
     return True
