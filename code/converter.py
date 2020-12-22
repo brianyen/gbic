@@ -14,8 +14,8 @@ def main(url):
         initial_timestamps = get_iframes_ts(temp_dir)
         frames, fixed_timestamps = get_iframes(temp_dir, initial_timestamps)
         subtitles = get_subtitles_with_ts(temp_dir)
-        j = construct_json_file(fixed_timestamps, frames, subtitles)
-        print(json.dumps(j, indent=4))
+        frame_json = construct_json_file(fixed_timestamps, frames, subtitles)
+        print(frame_json)
         return 
     else:
         return
@@ -85,8 +85,8 @@ def construct_json_file(timestamps, frames, subtitles):
         while current_line_ts < timestamps[i + 1] and line_num < len(subtitles):
             line_timestamp = subtitles[line_num]['timestamp']
             lines = {
-                "line_timestamp": convert_s_to_hms(round(line_timestamp)),
-                "line": subtitles[line_num]['sentence']
+                "ts": convert_s_to_hms(round(line_timestamp)),
+                "text": subtitles[line_num]['sentence']
             }
             line_num += 1
             current_line_ts = line_timestamp
@@ -94,11 +94,11 @@ def construct_json_file(timestamps, frames, subtitles):
 
         iframe = {
             "ts": convert_s_to_hms(time_rounded),
-            "img": frames[i],
+            "png": frames[i],
             "text": text_dict
         }
         converted_dict.append(iframe)
-    return converted_dict#json.dumps(converted_dict)
+    return json.dumps(converted_dict, indent=4)
 
 def verify_url(url):
     return True
