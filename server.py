@@ -1,33 +1,11 @@
-
 from jinja2 import Template
 import json
 
 with open('data.json') as f:
-    info_json = f.read()
-info_dict = json.loads(info_json)
+    data = f.read()
 
+slides = json.loads(data)
 
-def paragraph(slide):
-	i = ""
-	for line in slide["text"]:
-		i = i + """
-			<p class='paragraph'>""" + line["ts"] + ": " + line["text"] + "</p>"
-	return i	
-
-def groups(slides):
-	v = ""
-	for slide in slides:
-		v = v + """<p class="paragraph" style="margin-top: 5px; margin-bottom: 5px">""" + slide["ts"] + """</p>
-			<div class="group">
-				<div class="column">
-					<img class="slide" src=""" + slide["png"] + """ alt="placeholder image">
-				</div>
-				<div class="column">
-					""" + paragraph(slide) + """
-				</div>
-			</div>"""
-	return v
-	
 
 h = """<!DOCTYPE html>
 <html>
@@ -44,7 +22,23 @@ h = """<!DOCTYPE html>
 </div>
 
 <div id="content">
-	{{ insides }}
+
+{% for slide in slides %}
+    <div>
+		<p class="paragraph" style="margin-top: 5px; margin-bottom: 5px">{{ slide.ts }}</p>
+		<div class="group">
+			<div class="column">
+				<img class="slide" src="{{ slide.png }}" alt="placeholder image">
+			</div>
+			<div class="column">
+				{% for line in slide.text %}
+					<p class='paragraph'> {{ line.ts }} <br> {{ line.text }} </p>
+				{% endfor %}
+			</div>
+		</div>
+    </div>    
+{% endfor %}
+
 </div>
 
 <script>
@@ -108,4 +102,4 @@ div.column {
 
 t = Template(h)
 
-print(t.render(a="https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png", insides=groups(info_dict)))
+print(t.render(slides=slides))
