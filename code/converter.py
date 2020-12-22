@@ -43,7 +43,7 @@ def get_iframes(temp_dir, timestamps):
     return frames, fixed_timestamps
 
 def get_iframes_ts(temp_dir):
-    stream = os.popen('ffprobe -show_frames -of json -f lavfi "movie=test-iframes/radix.mp4,select=gt(scene\\,0.1)"')
+    stream = os.popen('ffprobe -show_frames -of json -f lavfi "movie=' + temp_dir.name + '/vid.mp4,select=gt(scene\\,0.1)"')
     output = stream.read()
     metadata = output[output.index("{"):]
     metadata_dict = json.loads(metadata)
