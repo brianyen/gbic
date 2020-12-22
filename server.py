@@ -10,13 +10,15 @@ info_dict = json.loads(info_json)
 def paragraph(slide):
 	i = ""
 	for line in slide["text"]:
-		i = i + "<p class='paragraph'>" + line["ts"] + ": " + line["text"] + "</p>"
+		i = i + """
+			<p class='paragraph'>""" + line["ts"] + ": " + line["text"] + "</p>"
 	return i	
 
 def groups(slides):
 	v = ""
 	for slide in slides:
-		v = v + """<div class="group">
+		v = v + """<p class="paragraph" style="margin-top: 5px; margin-bottom: 5px">""" + slide["ts"] + """</p>
+			<div class="group">
 				<div class="column">
 					<img class="slide" src=""" + slide["png"] + """ alt="placeholder image">
 				</div>
