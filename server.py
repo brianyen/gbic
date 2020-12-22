@@ -2,13 +2,9 @@
 from jinja2 import Template
 import json
 
-#with open('data.json') as f:
-#	info_json = f.read()
-#info_dict = json.loads(f)
-
-#with open('data.json') as f:
-#    info_json = f.read()
-#info_dict = json.loads(info_json)
+with open('data.json') as f:
+    info_json = f.read()
+info_dict = json.loads(info_json)
 
 class text11:
 	ts = "00:00"
@@ -86,8 +82,8 @@ slides = [slide1, slide2, slide3]
 
 def paragraph(slide):
 	i = ""
-	for line in slide.text:
-		i = i + "<p class='paragraph'>" + line.ts + ": " + line.text + "</p>"
+	for line in slide["text"]:
+		i = i + "<p class='paragraph'>" + line["ts"] + ": " + line["text"] + "</p>"
 	return i	
 
 def groups(slides):
@@ -95,7 +91,7 @@ def groups(slides):
 	for slide in slides:
 		v = v + """<div class="group">
 				<div class="column">
-					<img class="slide" src=""" + slide.img + """ alt="placeholder image">
+					<img class="slide" src=""" + slide["png"] + """ alt="placeholder image">
 				</div>
 				<div class="column">
 					""" + paragraph(slide) + """
@@ -183,4 +179,4 @@ div.column {
 
 t = Template(h)
 
-print(t.render(a="https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png", insides=groups(slides)))
+print(t.render(a="https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png", insides=groups(info_dict)))
