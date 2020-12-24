@@ -5,7 +5,7 @@ import shutil
 import json
 import math
 import datetime
-from google.cloud import speech
+from fastpunct import FastPunct
 
 def main(url):
     if verify_url(url):
@@ -16,7 +16,7 @@ def main(url):
         frames, fixed_timestamps = get_iframes(temp_dir, initial_timestamps)
         subtitles = get_subtitles_with_ts(temp_dir)
         frame_json = construct_json_file(fixed_timestamps, frames, subtitles)
-        print(frame_json)
+        convert_subtitles_to_transcript(subtitles)
         return 
     else:
         return
@@ -110,8 +110,17 @@ def convert_ms_to_s(x):
 def convert_s_to_hms(x):
     return str(datetime.timedelta(seconds=x))
 
+def convert_subtitles_to_transcript(subtitles):
+    transcript = subtitles[0]['sentence']
+    for i in range(1, 5):
+        transcript = transcript + " " + subtitles[i]['sentence']
+    punctuated_transcript = add_punctuation(transcript)
+    print(punctuated_transcript)
+    return transcript
+
 def add_punctuation(transcript):
-    punctuated = transcript
-    return punctuated
+    fastpunct = FastPunct('en')
+    return fastpunct.punct([transcript], batch_size=32)
+    #return fastpunct.punct([transcript], batch_size=32)
 
 main("https://www.youtube.com/watch?v=gDqLFijKsfw")
