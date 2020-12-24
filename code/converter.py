@@ -5,6 +5,7 @@ import shutil
 import json
 import math
 import datetime
+from google.cloud import speech
 
 def main(url):
     if verify_url(url):
@@ -108,5 +109,9 @@ def convert_ms_to_s(x):
 
 def convert_s_to_hms(x):
     return str(datetime.timedelta(seconds=x))
+
+def add_punctuation(transcript):
+    punctuated = transcript
+    return punctuated
 
 main("https://www.youtube.com/watch?v=gDqLFijKsfw")
