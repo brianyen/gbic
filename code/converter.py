@@ -5,21 +5,40 @@ import shutil
 import json
 import math
 import datetime
-from fastpunct import FastPunct
+import youtube_dl
+from youtube_dl import YoutubeDL
 
 def main(url):
     if verify_url(url):
         temp_dir = tempfile.TemporaryDirectory()
-        print(temp_dir.name)
+        real_url = get_real_url(url)
+        duration = get_video_duration(url)
+        instances = math.floor(duration / 300) + 1
+
         convert_to_mp4(url, temp_dir)
-        initial_timestamps = get_iframes_ts(temp_dir)
+        initial_timestamps = get_iframes_ts(temp_dir, real_url)
         frames, fixed_timestamps = get_iframes(temp_dir, initial_timestamps)
         subtitles = get_subtitles_with_ts(temp_dir)
         frame_json = construct_json_file(fixed_timestamps, frames, subtitles)
-        convert_subtitles_to_transcript(subtitles)
+        print(frame_json)
+        #convert_subtitles_to_transcript(subtitles)
         return 
     else:
+        temp_dir = tempfile.TemporaryDirectory()
+        real_url = get_real_url(url)
         return
+
+def get_video_duration(url):
+    stream = os.popen('../.././youtube-dlc --get-duration ' + url)
+    output = stream.read()
+    duration = get_sec(output)
+    return duration
+
+def convert_range_to_mp4(url, instance_num, tempdir):
+    start_time = 300 * instance_num
+    stream = os.popen('ffmpeg -ss ' + start_time + ' -i $(../.././youtube-dlc -f 22 -g ' + url + ') -acodec copy -vcodec copy -t 300 output' + instance_num + '.mp4')
+    output = stream.read()
+    return output
 
 def convert_to_mp4(url, temp_dir):
     #downloads video mp4
@@ -43,7 +62,7 @@ def get_iframes(temp_dir, timestamps):
         last_ts = ts
     return frames, fixed_timestamps
 
-def get_iframes_ts(temp_dir):
+def get_iframes_ts(temp_dir, url):
     stream = os.popen('ffprobe -show_frames -of json -f lavfi "movie=' + temp_dir.name + '/vid.mp4,select=gt(scene\\,0.1)"')
     output = stream.read()
     metadata = output[output.index("{"):]
@@ -110,6 +129,23 @@ def convert_ms_to_s(x):
 def convert_s_to_hms(x):
     return str(datetime.timedelta(seconds=x))
 
+def get_sec(time_str):
+    """Get Seconds from time."""
+    count = 0;
+    for i in time_str:
+        if i == ':':
+            count += 1
+    if count == 0:
+        return time_str
+    if count == 1:
+        m, s = time_str.split(':')
+        return int(m) * 60 + int(s)
+    else:
+        h, m, s = time_str.split(':')
+        return int(h) * 3600 + int(m) * 60 + int(s)
+
+##############################################################
+
 def convert_subtitles_to_transcript(subtitles):
     transcript = subtitles[0]['sentence']
     for i in range(1, 5):
@@ -123,4 +159,15 @@ def add_punctuation(transcript):
     return fastpunct.punct([transcript], batch_size=32)
     #return fastpunct.punct([transcript], batch_size=32)
 
-main("https://www.youtube.com/watch?v=gDqLFijKsfw")
+##############################################################
+
+def get_real_url(url):
+    stream = os.popen('../.././youtube-dlc -g "' + url + '"')
+    output = stream.read()
+    first_url = 'https'.join(output.split("https", 2)[:2])
+    return first_url
+
+##############################################################
+
+download_url = "https://www.youtube.com/watch?v=4rA9E2FuLkU"
+main(download_url)
