@@ -14,6 +14,8 @@ def main(url):
         real_url = get_real_url(url)
         duration = get_video_duration(url)
         instances = math.floor(duration / 300) + 1
+        for i in range(instances):
+            print(i)
 
         convert_to_mp4(url, temp_dir)
         initial_timestamps = get_iframes_ts(temp_dir, real_url)
