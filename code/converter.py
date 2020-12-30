@@ -14,16 +14,22 @@ def main(url):
         real_url = get_real_url(url)
         duration = get_video_duration(url)
         instances = math.floor(duration / 300) + 1
+        get_subtitles(url, temp_dir)
+        subtitles = get_subtitles_with_ts(temp_dir)
         for i in range(instances):
-            print(i)
+            convert_range_to_mp4(url, i, temp_dir)
+            initial_timestamps = get_iframes_ts(i, temp_dir)
+            frames, fixed_timestamps = get_iframes(i, initial_timestamps, temp_dir)
+            frame_json = construct_json_file(i, fixed_timestamps, frames, subtitles)
+            print(frame_json)
 
-        convert_to_mp4(url, temp_dir)
+        """convert_to_mp4(url, temp_dir)
         initial_timestamps = get_iframes_ts(temp_dir, real_url)
-        frames, fixed_timestamps = get_iframes(temp_dir, initial_timestamps)
+        frames, fixed_timestamps = get_iframes(i, initial_timestamps, temp_dir)
         subtitles = get_subtitles_with_ts(temp_dir)
         frame_json = construct_json_file(fixed_timestamps, frames, subtitles)
         print(frame_json)
-        #convert_subtitles_to_transcript(subtitles)
+        #convert_subtitles_to_transcript(subtitles)"""
         return 
     else:
         temp_dir = tempfile.TemporaryDirectory()
@@ -36,9 +42,14 @@ def get_video_duration(url):
     duration = get_sec(output)
     return duration
 
-def convert_range_to_mp4(url, instance_num, tempdir):
-    start_time = 300 * instance_num
-    stream = os.popen('ffmpeg -ss ' + start_time + ' -i $(../.././youtube-dlc -f 22 -g ' + url + ') -acodec copy -vcodec copy -t 300 output' + instance_num + '.mp4')
+def get_subtitles(url, temp_dir):
+    stream = os.popen('../.././youtube-dlc -o "' + temp_dir.name + '/subs" --write-auto-sub --sub-format json3 --skip-download ' + url)
+    output = stream.read()
+    return output
+
+def convert_range_to_mp4(url, instance, temp_dir):
+    start_time = 300 * instance
+    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(../.././youtube-dlc -f 22 -g ' + url + ') -acodec copy -vcodec copy -t 300 ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
     output = stream.read()
     return output
 
@@ -48,7 +59,7 @@ def convert_to_mp4(url, temp_dir):
     output = stream.read()
     return output
 
-def get_iframes(temp_dir, timestamps):
+def get_iframes(instance, timestamps, temp_dir):
     #change min_frame_diff based on video runtime
     min_frame_diff = 5
     last_ts = -math.inf
@@ -57,27 +68,29 @@ def get_iframes(temp_dir, timestamps):
     for ts in timestamps:
         if ts - last_ts < min_frame_diff:
             continue
-        stream = os.popen('ffmpeg -ss ' + str(ts) + ' -i ' + temp_dir.name + '/vid.mp4 -c:v png -frames:v 1 ' + temp_dir.name + '/frame-' + str(ts) + '.png')
+        hms_ts = convert_s_to_hms(round(ts))
+        stream = os.popen('ffmpeg -ss ' + str(ts) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 ' + temp_dir.name + '/frame-' + hms_ts + '.png')
         output = stream.read()
-        frames.append('frame-' + str(ts) + '.png')
+        frames.append('frame-' + hms_ts + '.png')
         fixed_timestamps.append(ts)
         last_ts = ts
     return frames, fixed_timestamps
 
-def get_iframes_ts(temp_dir, url):
-    stream = os.popen('ffprobe -show_frames -of json -f lavfi "movie=' + temp_dir.name + '/vid.mp4,select=gt(scene\\,0.1)"')
+def get_iframes_ts(instance, temp_dir):
+    stream = os.popen('ffprobe -show_frames -of json -f lavfi "movie=' + temp_dir.name + '/vid' + str(instance) + '.mp4,select=gt(scene\\,0.1)"')
     output = stream.read()
     metadata = output[output.index("{"):]
     metadata_dict = json.loads(metadata)
     timestamps = []
-    timestamps.append(0.0)
+    start_time = instance * 300.0
+    timestamps.append(start_time)
 
     for frame in metadata_dict['frames']:
-        timestamps.append(float(frame.get('best_effort_timestamp_time')))
+        timestamps.append(start_time + float(frame.get('best_effort_timestamp_time')))
     return timestamps
 
 def get_subtitles_with_ts(temp_dir):
-    with open(temp_dir.name + '/vid.en.json3', 'r') as f:
+    with open(temp_dir.name + '/subs.en.json3', 'r') as f:
         subtitle_json = f.read()
     subtitle_dict = json.loads(subtitle_json)
 
@@ -95,24 +108,26 @@ def get_subtitles_with_ts(temp_dir):
             subtitles_with_ts.append(line)
     return subtitles_with_ts
 
-def construct_json_file(timestamps, frames, subtitles):
+def construct_json_file(instance, timestamps, frames, subtitles):
     num_frames = len(frames)
     timestamps.append(math.inf)
     converted_dict = []
     line_num = 0
     current_line_ts = 0
+    start_time = instance * 300
     for i in range(0, num_frames):
         time_rounded = round(timestamps[i])
         text_dict = []
-        while current_line_ts < timestamps[i + 1] and line_num < len(subtitles):
+        while current_line_ts < timestamps[i + 1] and line_num < len(subtitles) and current_line_ts < start_time + 300:
             line_timestamp = subtitles[line_num]['timestamp']
-            lines = {
-                "ts": convert_s_to_hms(round(line_timestamp)),
-                "text": subtitles[line_num]['sentence']
-            }
+            if line_timestamp > start_time + 1:
+                lines = {
+                    "ts": convert_s_to_hms(round(line_timestamp)),
+                    "text": subtitles[line_num]['sentence']
+                }
+                text_dict.append(lines)
             line_num += 1
             current_line_ts = line_timestamp
-            text_dict.append(lines)
 
         iframe = {
             "ts": convert_s_to_hms(time_rounded),
