@@ -20,15 +20,9 @@ def main(url):
             convert_range_to_mp4(url, i, temp_dir)
             initial_timestamps = get_iframes_ts(i, temp_dir)
             frames, fixed_timestamps = get_iframes(i, initial_timestamps, temp_dir)
-            frame_json = construct_json_file(i, fixed_timestamps, frames, subtitles)
-            print(frame_json)
-
-        """convert_to_mp4(url, temp_dir)
-        initial_timestamps = get_iframes_ts(temp_dir, real_url)
-        frames, fixed_timestamps = get_iframes(i, initial_timestamps, temp_dir)
-        subtitles = get_subtitles_with_ts(temp_dir)
-        frame_json = construct_json_file(fixed_timestamps, frames, subtitles)
-        print(frame_json)
+            slides_json = construct_json_file(i, fixed_timestamps, frames, subtitles)
+            print(slides_json)
+        print("done")
         #convert_subtitles_to_transcript(subtitles)"""
         return 
     else:
@@ -53,12 +47,6 @@ def convert_range_to_mp4(url, instance, temp_dir):
     output = stream.read()
     return output
 
-def convert_to_mp4(url, temp_dir):
-    #downloads video mp4
-    stream = os.popen('../.././youtube-dlc -o "' + temp_dir.name + '/vid.mp4" --write-auto-sub --sub-format json3 -f mp4 ' + url)
-    output = stream.read()
-    return output
-
 def get_iframes(instance, timestamps, temp_dir):
     #change min_frame_diff based on video runtime
     min_frame_diff = 5
@@ -69,9 +57,9 @@ def get_iframes(instance, timestamps, temp_dir):
         if ts - last_ts < min_frame_diff:
             continue
         hms_ts = convert_s_to_hms(round(ts))
-        stream = os.popen('ffmpeg -ss ' + str(ts) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 ' + temp_dir.name + '/frame-' + hms_ts + '.png')
+        stream = os.popen('ffmpeg -ss ' + str(ts) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 ' + temp_dir.name + '/clip-' + str(instance).zfill(3) + '/slide-' + hms_ts + '.png')
         output = stream.read()
-        frames.append('frame-' + hms_ts + '.png')
+        frames.append('slide-' + hms_ts + '.png')
         fixed_timestamps.append(ts)
         last_ts = ts
     return frames, fixed_timestamps
