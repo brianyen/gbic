@@ -19,11 +19,13 @@ def main(url):
         subtitles = get_subtitles_with_ts(temp_dir)
         for i in range(instances):
             #make the directory for each clip
+            directory = 'clip-' + str(i).zfill(3)
+            path = os.path.join(temp_dir.name, directory)
+            os.makedirs(path)
             convert_range_to_mp4(url, i, temp_dir)
             initial_timestamps = get_iframes_ts(i, temp_dir)
-            frames, fixed_timestamps = get_iframes(i, initial_timestamps, temp_dir)
+            frames, fixed_timestamps = get_iframes(i, initial_timestamps, path, temp_dir)
             slides_json = construct_json_file(i, fixed_timestamps, frames, subtitles)
-            print(slides_json)
         print("done")
         time.sleep(500)
         #convert_subtitles_to_transcript(subtitles)"""
@@ -50,7 +52,7 @@ def convert_range_to_mp4(url, instance, temp_dir):
     output = stream.read()
     return output
 
-def get_iframes(instance, timestamps, temp_dir):
+def get_iframes(instance, timestamps, path, temp_dir):
     #change min_frame_diff based on video runtime
     min_frame_diff = 5
     last_ts = -math.inf
@@ -61,7 +63,10 @@ def get_iframes(instance, timestamps, temp_dir):
             continue
         hms_ts = convert_s_to_hms(round(ts))
         #make ffmpeg output "output.png" and rename it afterwards
-        stream = os.popen('ffmpeg -ss ' + str(ts) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 "' + temp_dir.name + '/a/slide-' + hms_ts + '.png"')
+        print(ts)
+        for i in range(10):
+            print(" ")
+        stream = os.popen('ffmpeg -ss ' + str(ts - (instance * 300)) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
         output = stream.read()
         frames.append('slide-' + hms_ts + '.png')
         fixed_timestamps.append(ts)
@@ -136,7 +141,8 @@ def convert_ms_to_s(x):
     return x / 1000.0
 
 def convert_s_to_hms(x):
-    return str(datetime.timedelta(seconds=x))
+    date = str(datetime.timedelta(seconds=x))
+    return date.replace(":", "-")
 
 def get_sec(time_str):
     """Get Seconds from time."""
@@ -177,6 +183,6 @@ def get_real_url(url):
     return first_url
 
 ##############################################################
-
+#download_url = "https://www.youtube.com/watch?v=R44tKAPpKOM"
 download_url = "https://www.youtube.com/watch?v=4rA9E2FuLkU"
 main(download_url)
