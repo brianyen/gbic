@@ -26,7 +26,10 @@ def main(url):
             initial_timestamps = get_iframes_ts(i, temp_dir)
             frames, fixed_timestamps = get_iframes(i, initial_timestamps, path, temp_dir)
             slides_json = construct_json_file(i, fixed_timestamps, frames, subtitles)
-            print(slides_json)
+
+            file = open(path + '/slides.json3', 'w')
+            file.write(slides_json)
+            file.close()
         print("done")
         #convert_subtitles_to_transcript(subtitles)"""
         return 
