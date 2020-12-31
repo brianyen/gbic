@@ -1,13 +1,14 @@
 <html>
 <body id="a">
 <div id="title">
-	<h1>GBIC</h1>
+	<h1>gbic</h1>
 </div>
 	
 <div id="search">
-	<input id="input"></input>
-	<button onClick = "run()">Go</button>
-	
+	<form id="form" action="https://us-central1-decisive-plasma-299605.cloudfunctions.net/hello_world ">
+		<input id="input" name="url"></input>
+		<input type="submit" value="Go">
+	</form>
 	<div id="bar"></div>
 </div>
 
@@ -17,11 +18,8 @@
 </div>
 
 <script>
-var inputEl = document.getElementById("input")
-var displayEl = document.getElementById("test")
-
-function run() {
-	displayEl.innerHTML = inputEl.value
+if (window.location.hostname == "localhost") {
+	document.getElementById("form").action = "http://localhost:8080/";
 }
 
 </script>
