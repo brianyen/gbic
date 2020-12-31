@@ -2,7 +2,7 @@ from jinja2 import Template
 import json
 
 def render(url):
-    with open('data.json') as f:
+    with open(url + '/clip-000/slides.json') as f:
         data = f.read()
 
     slides = json.loads(data)
@@ -27,4 +27,4 @@ def convert_url(request):
         print("hi")
         return render(request.args.get('url'))
     else:
-        return "figure something out"
+        return "nothing"
