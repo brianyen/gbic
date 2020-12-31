@@ -6,14 +6,21 @@ import json
 import math
 import datetime
 import youtube_dl
+import sys
 from youtube_dl import YoutubeDL
+
+def raiseError(message):
+    #...
+    sys.exit()
 
 def main(url):
     if verify_url(url):
         temp_dir = tempfile.TemporaryDirectory()
         print(temp_dir.name)
-        real_url = get_real_url(url)
         duration = get_video_duration(url)
+        if duration > 7200:
+            raiseError("Video too long! Can only process videos shorter than 2 hours.")
+
         instances = math.floor(duration / 300) + 1
         get_subtitles(url, temp_dir)
         subtitles = get_subtitles_with_ts(temp_dir)
@@ -176,11 +183,11 @@ def add_punctuation(transcript):
 
 ##############################################################
 
-def get_real_url(url):
-    stream = os.popen('../.././youtube-dlc -g "' + url + '"')
-    output = stream.read()
-    first_url = 'https'.join(output.split("https", 2)[:2])
-    return first_url
+class Error(Exception):
+    pass
+
+class VideoTooLongError():
+    pass
 
 ##############################################################
 #long video
