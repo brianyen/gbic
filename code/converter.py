@@ -9,8 +9,16 @@ import youtube_dl
 import sys
 from youtube_dl import YoutubeDL
 
+#long video
+#download_url = "https://www.youtube.com/watch?v=R44tKAPpKOM"
+
+#short video
+download_url = "https://www.youtube.com/watch?v=4rA9E2FuLkU"
+
 temp_dir = tempfile.TemporaryDirectory()
 print(temp_dir.name)
+
+##############################################################
 
 def raiseError(path, message):
     file = open(path + '/error.txt', "w")
@@ -24,10 +32,15 @@ def main(url):
     instances = math.floor(duration / 300) + 1
     get_subtitles(url)
     subtitles = get_subtitles_with_ts()
+    #Change temp_dir.name to output directory (video ID)
+    #os.makedirs("4rA9E2FuLkU")
+    file = open(temp_dir.name + '/subtitles.json', 'w')
+    file.write(str(subtitles))
+    file.close()
 
     for i in range(instances):
-        #make the directory for each clip
         directory = 'clip-' + str(i).zfill(3)
+        #Change temp_dir.name to output directory (video ID)
         path = os.path.join(temp_dir.name, directory)
         os.makedirs(path)
         convert_range_to_mp4(url, i)
@@ -39,9 +52,9 @@ def main(url):
         file = open(path + '/slides.json', 'w')
         file.write(slides_json)
         file.close()
+    #Change temp_dir.name to output directory (video ID)
     file = open(temp_dir.name + '/done.txt', "x")
     file.close()
-    time.sleep(100)
     #convert_subtitles_to_transcript(subtitles)"""
 
 
@@ -191,9 +204,5 @@ class VideoTooLongError():
     pass
 
 ##############################################################
-#long video
-#download_url = "https://www.youtube.com/watch?v=R44tKAPpKOM"
 
-#short video
-download_url = "https://www.youtube.com/watch?v=4rA9E2FuLkU"
 main(download_url)
