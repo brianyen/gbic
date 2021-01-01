@@ -10,25 +10,26 @@
 		<input id="input" name="url"></input>
 		<input type="submit" value="Go">
 	</form>
-	<div id="bar"></div>
+	<div class="bar"></div>
 </div>
 
 <div id="content">
 
 {% for slide in slides %}
     <div>
-		<p class="paragraph" style="margin-top: 5px; margin-bottom: 5px">{{ slide.ts }}</p>
+		<!-- <p class="paragraph" style="margin-top: 5px; margin-bottom: 5px">{{ slide.ts }}</p> -->
 		<div class="group">
 			<div class="column">
-				<img class="slide" src="{{ slide.png }}" alt="placeholder image">
+				<img class="slide" src="http://localhost:8000/code/4rA9E2FuLkU/{{ slide.png }}" alt="placeholder image">
 			</div>
 			<div class="column">
 				{% for line in slide.text %}
-					<p class='paragraph'> {{ line.ts }}: {{ line.text }} </p>
+					<p class='paragraph'> <span class="timestamp">{{ line.ts }}:</span> {{ line.text }} </p>
 				{% endfor %}
 			</div>
 		</div>
     </div>    
+	<div class="bar"></bar>
 {% endfor %}
 
 {% if errors != "" %}
@@ -53,7 +54,7 @@ if (window.location.hostname == "localhost") {
 	text-align: center;
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 	padding: 1px;
-	font-size: 40px;
+	font-size: 25px;
 	background-color: rgb(185, 185, 255);
 }
 #search {
@@ -63,7 +64,7 @@ if (window.location.hostname == "localhost") {
 #input {
 	width: 250px;
 }
-#bar {
+.bar {
 	border-top: 3px solid rgb(200, 200, 200);
 	padding: 0px;
 	margin: 50px;
@@ -88,6 +89,10 @@ div.column {
 	width: 90%;
 	word-wrap: break-word;
 	overflow-x: hidden;
+	font-size: 125%;
+}
+.timestamp {
+	font-size: 75%;
 }
 </style>
 </html>
