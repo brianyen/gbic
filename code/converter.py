@@ -9,19 +9,23 @@ import youtube_dl
 import sys
 from youtube_dl import YoutubeDL
 
+download_url = sys.argv[1]
+out_dir = sys.argv[2]
+
 #long video
 #download_url = "https://www.youtube.com/watch?v=R44tKAPpKOM"
 
 #short video
-download_url = "https://www.youtube.com/watch?v=4rA9E2FuLkU"
+#download_url = "https://www.youtube.com/watch?v=4rA9E2FuLkU"
 
 temp_dir = tempfile.TemporaryDirectory()
+#out_dir = temp_dir.name
 print(temp_dir.name)
 
 ##############################################################
 
-def raiseError(path, message):
-    file = open(path + '/error.txt', "w")
+def raiseError(message):
+    file = open(out_dir + '/error.txt', "w")
     file.write(message)
     file.close()
     sys.exit()
@@ -33,19 +37,18 @@ def main(url):
     get_subtitles(url)
     subtitles = get_subtitles_with_ts()
     #Change temp_dir.name to output directory (video ID)
-    #os.makedirs("4rA9E2FuLkU")
-    file = open(temp_dir.name + '/subtitles.json', 'w')
+    os.makedirs(out_dir, exist_ok=True)
+    file = open(out_dir + '/subtitles.json', 'w')
     file.write(str(subtitles))
     file.close()
 
     for i in range(instances):
         directory = 'clip-' + str(i).zfill(3)
         #Change temp_dir.name to output directory (video ID)
-        path = os.path.join(temp_dir.name, directory)
-        os.makedirs(path)
+        path = os.path.join(out_dir, directory)
+        os.makedirs(path, exist_ok=True)
         convert_range_to_mp4(url, i)
-        initial_timestamps = get_iframes_ts(i)
-        frames, fixed_timestamps = get_iframes(i, initial_timestamps, path)
+        frames, fixed_timestamps = get_iframes(i, path)
         slides_json = construct_json_file(i, fixed_timestamps, frames, subtitles)
         print(slides_json)
 
@@ -53,7 +56,7 @@ def main(url):
         file.write(slides_json)
         file.close()
     #Change temp_dir.name to output directory (video ID)
-    file = open(temp_dir.name + '/done.txt', "x")
+    file = open(out_dir + '/done.txt', "x")
     file.close()
     #convert_subtitles_to_transcript(subtitles)"""
 
@@ -75,8 +78,10 @@ def convert_range_to_mp4(url, instance):
     output = stream.read()
     return output
 
-def get_iframes(instance, timestamps, path):
+def get_iframes(instance, path):
     #change min_frame_diff based on video runtime
+    timestamps = get_iframes_ts(instance)
+
     min_frame_diff = 5
     last_ts = -math.inf
     frames = []
@@ -88,7 +93,7 @@ def get_iframes(instance, timestamps, path):
         #make ffmpeg output "output.png" and rename it afterwards
         stream = os.popen('ffmpeg -ss ' + str(ts - (instance * 300)) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
         output = stream.read()
-        frames.append('slide-' + hms_ts + '.png')
+        frames.append('clip-' + str(instance).zfill(3) + '/slide-' + hms_ts + '.png')
         fixed_timestamps.append(ts)
         last_ts = ts
     return frames, fixed_timestamps
@@ -156,7 +161,7 @@ def construct_json_file(instance, timestamps, frames, subtitles):
 
 def verify_url(url, duration):
     if duration > 7200:
-        raiseError(temp_dir.name, "Video too long! Can only process videos shorter than 2 hours.")
+        raiseError("Video too long! Can only process videos shorter than 2 hours.")
 
 def convert_ms_to_s(x):
     return x / 1000.0
