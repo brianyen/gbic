@@ -13,6 +13,10 @@
 	<div class="bar"></div>
 </div>
 
+{% if errors != "" %}
+	<div> {{ errors }} </div>
+{% endif %}
+
 <div id="content">
 
 {% for slide in slides %}
@@ -29,7 +33,8 @@
 			</div>
 		</div>
     </div>    
-	<div class="bar"></bar>
+	<div class="bar"></div>
+
 {% endfor %}
 
 {% if errors != "" %}
@@ -90,6 +95,8 @@ div.column {
 	word-wrap: break-word;
 	overflow-x: hidden;
 	font-size: 125%;
+	margin-bottom: 0px;
+	margin-top: 1%;
 }
 .timestamp {
 	font-size: 75%;
