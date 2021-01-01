@@ -2,10 +2,18 @@ from jinja2 import Template
 import json
 
 def render(url):
-    with open(url + '/clip-000/slides.json') as f:
-        data = f.read()
+    slides = []
+    i = 0
+    while True:
+        try:
+            print("trying clip " + str(i))
+            with open(url + '/clip-' + "{:03d}".format(i) +'/slides.json') as f:
+                data = f.read()
+        except FileNotFoundError:
+            break
 
-    slides = json.loads(data)
+        slides = slides + json.loads(data)
+        i = i + 1
 
     with open('html.tmpl') as q:
         html = q.read()
@@ -24,7 +32,6 @@ def convert_url(request):
         `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
     """
     if request.args and 'url' in request.args:
-        print("hi")
         return render(request.args.get('url'))
     else:
         return "nothing"
