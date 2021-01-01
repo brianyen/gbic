@@ -4,7 +4,7 @@
 <div id="title">
 	<h1><a href="http://localhost:8000/gbic-ajob1.html">gbic</a></h1>
 </div>
-	
+
 <div id="search">
 	<form id="form" action="https://us-central1-decisive-plasma-299605.cloudfunctions.net/hello_world ">
 		<input id="input" name="url"></input>
@@ -30,6 +30,10 @@
 		</div>
     </div>    
 {% endfor %}
+
+{% if errors != "" %}
+	<div> {{ errors }} </div>
+{% endif %}
 
 </div>
 

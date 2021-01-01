@@ -1,7 +1,7 @@
 from jinja2 import Template
 import json
 
-def render(url):
+def render(url):    
     slides = []
     i = 0
     while True:
@@ -14,13 +14,20 @@ def render(url):
 
         slides = slides + json.loads(data)
         i = i + 1
+        
+    try: 
+        with open(url + '/errors.txt') as f:
+            errors =  f.read()
+            print(errors)
+    except FileNotFoundError:
+        errors = ""   
 
     with open('html.tmpl') as q:
         html = q.read()
 
     t = Template(html)
 
-    return t.render(slides=slides, url=url)
+    return t.render(slides=slides, url=url, errors=errors)
  
 def convert_url(request):
     """Responds to any HTTP request.
