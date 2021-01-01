@@ -9,43 +9,41 @@ import youtube_dl
 import sys
 from youtube_dl import YoutubeDL
 
-def raiseError(message):
-    #...
+temp_dir = tempfile.TemporaryDirectory()
+print(temp_dir.name)
+
+def raiseError(path, message):
+    file = open(path + '/error.txt', "w")
+    file.write(message)
+    file.close()
     sys.exit()
 
 def main(url):
-    if verify_url(url):
-        temp_dir = tempfile.TemporaryDirectory()
-        print(temp_dir.name)
-        duration = get_video_duration(url)
-        if duration > 7200:
-            raiseError("Video too long! Can only process videos shorter than 2 hours.")
+    duration = get_video_duration(url)
+    verify_url(url, duration)
+    instances = math.floor(duration / 300) + 1
+    get_subtitles(url)
+    subtitles = get_subtitles_with_ts()
 
-        instances = math.floor(duration / 300) + 1
-        get_subtitles(url, temp_dir)
-        subtitles = get_subtitles_with_ts(temp_dir)
-        for i in range(instances):
-            #make the directory for each clip
-            directory = 'clip-' + str(i).zfill(3)
-            path = os.path.join(temp_dir.name, directory)
-            os.makedirs(path)
-            convert_range_to_mp4(url, i, temp_dir)
-            initial_timestamps = get_iframes_ts(i, temp_dir)
-            frames, fixed_timestamps = get_iframes(i, initial_timestamps, path, temp_dir)
-            slides_json = construct_json_file(i, fixed_timestamps, frames, subtitles)
+    for i in range(instances):
+        #make the directory for each clip
+        directory = 'clip-' + str(i).zfill(3)
+        path = os.path.join(temp_dir.name, directory)
+        os.makedirs(path)
+        convert_range_to_mp4(url, i)
+        initial_timestamps = get_iframes_ts(i)
+        frames, fixed_timestamps = get_iframes(i, initial_timestamps, path)
+        slides_json = construct_json_file(i, fixed_timestamps, frames, subtitles)
+        print(slides_json)
 
-            file = open(path + '/slides.json', 'w')
-            file.write(slides_json)
-            file.close()
-        file = open(temp_dir.name + '/done.txt', "x")
+        file = open(path + '/slides.json', 'w')
+        file.write(slides_json)
         file.close()
-        time.sleep(100)
-        #convert_subtitles_to_transcript(subtitles)"""
-        return 
-    else:
-        temp_dir = tempfile.TemporaryDirectory()
-        real_url = get_real_url(url)
-        return
+    file = open(temp_dir.name + '/done.txt', "x")
+    file.close()
+    time.sleep(100)
+    #convert_subtitles_to_transcript(subtitles)"""
+
 
 def get_video_duration(url):
     stream = os.popen('../.././youtube-dlc --get-duration ' + url)
@@ -53,18 +51,18 @@ def get_video_duration(url):
     duration = get_sec(output)
     return duration
 
-def get_subtitles(url, temp_dir):
+def get_subtitles(url):
     stream = os.popen('../.././youtube-dlc -o "' + temp_dir.name + '/subs" --write-auto-sub --sub-format json3 --skip-download ' + url)
     output = stream.read()
     return output
 
-def convert_range_to_mp4(url, instance, temp_dir):
+def convert_range_to_mp4(url, instance):
     start_time = 300 * instance
     stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(../.././youtube-dlc -f 22 -g ' + url + ') -acodec copy -vcodec copy -t 300 ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
     output = stream.read()
     return output
 
-def get_iframes(instance, timestamps, path, temp_dir):
+def get_iframes(instance, timestamps, path):
     #change min_frame_diff based on video runtime
     min_frame_diff = 5
     last_ts = -math.inf
@@ -82,7 +80,7 @@ def get_iframes(instance, timestamps, path, temp_dir):
         last_ts = ts
     return frames, fixed_timestamps
 
-def get_iframes_ts(instance, temp_dir):
+def get_iframes_ts(instance):
     stream = os.popen('ffprobe -show_frames -of json -f lavfi "movie=' + temp_dir.name + '/vid' + str(instance) + '.mp4,select=gt(scene\\,0.1)"')
     output = stream.read()
     metadata = output[output.index("{"):]
@@ -95,7 +93,7 @@ def get_iframes_ts(instance, temp_dir):
         timestamps.append(start_time + float(frame.get('best_effort_timestamp_time')))
     return timestamps
 
-def get_subtitles_with_ts(temp_dir):
+def get_subtitles_with_ts():
     with open(temp_dir.name + '/subs.en.json3', 'r') as f:
         subtitle_json = f.read()
     subtitle_dict = json.loads(subtitle_json)
@@ -143,8 +141,9 @@ def construct_json_file(instance, timestamps, frames, subtitles):
         converted_dict.append(iframe)
     return json.dumps(converted_dict, indent=4)
 
-def verify_url(url):
-    return True
+def verify_url(url, duration):
+    if duration > 7200:
+        raiseError(temp_dir.name, "Video too long! Can only process videos shorter than 2 hours.")
 
 def convert_ms_to_s(x):
     return x / 1000.0
