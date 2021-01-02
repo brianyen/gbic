@@ -31,11 +31,16 @@ def raiseError(message):
     sys.exit()
 
 def main(url):
+
     duration = get_video_duration(url)
-    verify_url(url, duration)
+    verify_video_length(duration)
+
     instances = math.floor(duration / 300) + 1
     get_subtitles(url)
     subtitles = get_subtitles_with_ts()
+
+    get_video_info(url)
+
     #Change temp_dir.name to output directory (video ID)
     os.makedirs(out_dir, exist_ok=True)
     file = open(out_dir + '/subtitles.json', 'w')
@@ -60,17 +65,21 @@ def main(url):
     file.close()
     #convert_subtitles_to_transcript(subtitles)"""
 
-
 def get_video_duration(url):
     stream = os.popen('../.././youtube-dlc --get-duration ' + url)
     output = stream.read()
     duration = get_sec(output)
     return duration
 
-def get_subtitles(url):
-    stream = os.popen('../.././youtube-dlc -o "' + temp_dir.name + '/subs" --write-auto-sub --sub-format json3 --skip-download ' + url)
+def get_video_info(url):
+    stream = os.popen('../.././youtube-dlc -o "' + out_dir + '/vid" --write-info-json --skip-download ' + url)
     output = stream.read()
     return output
+
+def get_subtitles(url):
+	stream = os.popen('../.././youtube-dlc -o "' + temp_dir.name + '/subs" --write-auto-sub --sub-format json3 --skip-download ' + url)
+	output = stream.read()
+	return output
 
 def convert_range_to_mp4(url, instance):
     start_time = 300 * instance
@@ -159,7 +168,7 @@ def construct_json_file(instance, timestamps, frames, subtitles):
         converted_dict.append(iframe)
     return json.dumps(converted_dict, indent=4)
 
-def verify_url(url, duration):
+def verify_video_length(duration):
     if duration > 7200:
         raiseError("Video too long! Can only process videos shorter than 2 hours.")
 
