@@ -66,24 +66,24 @@ def main(url):
     #convert_subtitles_to_transcript(subtitles)"""
 
 def get_video_duration(url):
-    stream = os.popen('../.././youtube-dlc --get-duration ' + url)
+    stream = os.popen('./youtube-dlc --get-duration ' + url)
     output = stream.read()
     duration = get_sec(output)
     return duration
 
 def get_video_info(url):
-    stream = os.popen('../.././youtube-dlc -o "' + out_dir + '/vid" --write-info-json --skip-download ' + url)
+    stream = os.popen('./youtube-dlc -o "' + out_dir + '/vid" --write-info-json --skip-download ' + url)
     output = stream.read()
     return output
 
 def get_subtitles(url):
-	stream = os.popen('../.././youtube-dlc -o "' + temp_dir.name + '/subs" --write-auto-sub --sub-format json3 --skip-download ' + url)
+	stream = os.popen('./youtube-dlc -o "' + temp_dir.name + '/subs" --write-auto-sub --sub-format json3 --skip-download ' + url)
 	output = stream.read()
 	return output
 
 def convert_range_to_mp4(url, instance):
     start_time = 300 * instance
-    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(../.././youtube-dlc -f 22 -g ' + url + ') -acodec copy -vcodec copy -t 300 ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
+    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(./youtube-dlc -f 22 -g ' + url + ') -acodec copy -vcodec copy -t 300 ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
     output = stream.read()
     return output
 
@@ -101,6 +101,11 @@ def get_iframes(instance, path):
         hms_ts = convert_s_to_hms(round(ts))
         #make ffmpeg output "output.png" and rename it afterwards
         stream = os.popen('ffmpeg -ss ' + str(ts - (instance * 300)) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
+        os.system('ls ' + temp_dir.name)
+        #os.rename(temp_dir.name + '/output.png', path + '/slide-' + hms_ts + '.png')
+        os.system('ls ' + path)
+       	for i in range (10):
+       		print(" ")
         output = stream.read()
         frames.append('clip-' + str(instance).zfill(3) + '/slide-' + hms_ts + '.png')
         fixed_timestamps.append(ts)
@@ -186,7 +191,7 @@ def get_sec(time_str):
         if i == ':':
             count += 1
     if count == 0:
-        return time_str
+        return int(time_str)
     if count == 1:
         m, s = time_str.split(':')
         return int(m) * 60 + int(s)

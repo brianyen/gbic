@@ -1,13 +1,20 @@
 from jinja2 import Template
 import json
+import os
+import urllib
 
 def render(url):    
+    out_dir = urllib.parse.quote_plus(url)
+    out_dir = out_dir.replace("%", "-")
+    stream = os.popen('python3 code/converter.py ' + url + ' ' + out_dir)
+    output = stream.read()
+
     slides = []
     i = 0
     while True:
         try:
             print("trying clip " + str(i))
-            with open(url + '/clip-' + "{:03d}".format(i) +'/slides.json') as f:
+            with open(out_dir + '/clip-' + "{:03d}".format(i) +'/slides.json') as f:
                 data = f.read()
         except FileNotFoundError:
             break
@@ -16,7 +23,7 @@ def render(url):
         i = i + 1
         
     try: 
-        with open(url + '/errors.txt') as f:
+        with open(out_dir + '/errors.txt') as f:
             errors =  f.read()
             print(errors)
     except FileNotFoundError:
@@ -27,7 +34,7 @@ def render(url):
 
     t = Template(html)
 
-    return t.render(slides=slides, url=url, errors=errors)
+    return t.render(slides=slides, url=url, errors=errors, out_dir=out_dir)
  
 def convert_url(request):
     """Responds to any HTTP request.
