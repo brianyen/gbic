@@ -156,7 +156,7 @@ def construct_json_file(instance, timestamps, frames, subtitles):
         text_dict = []
         while current_line_ts < timestamps[i + 1] and line_num < len(subtitles) and current_line_ts < start_time + 300:
             line_timestamp = subtitles[line_num]['timestamp']
-            if line_timestamp > start_time + 1:
+            if line_timestamp > start_time:
                 lines = {
                     "ts": convert_s_to_hms(round(line_timestamp)),
                     "text": subtitles[line_num]['sentence']
