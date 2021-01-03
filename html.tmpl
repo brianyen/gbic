@@ -2,14 +2,16 @@
 <html>
 <body id="body">
 <div id="title">
-	<h1><a href="http://localhost:8000/gbic-ajob1.html">gbic</a></h1>
+	<h1><a id="title link" href="">gbic</a></h1>
 </div>
 
 <div style="display: flex">
 	<div id="metadata">
-		<div><b>Video URL:</b> {{ url }}</div>
-		<div><b>title:</b> something</div>
-		<div><b>creator:</b> someone</div>
+		<div><b>Video URL:</b> <a href="{{ url }}">{{ url }}</a></div>
+		<div><b>Title:</b> {{ title }}</div>
+		<div><b>Creator:</b> {{ creator }}</div>
+		<div><b>Video Length:</b> {{ duration }}</div>
+		<div id="description"><b>Description:</b> {{ description }}</div>	
 	</div>
 	<div id="search">
 		<form id="form" action="https://us-central1-decisive-plasma-299605.cloudfunctions.net/hello_world ">
@@ -54,6 +56,7 @@
 <script>
 if (window.location.hostname == "localhost") {
 	document.getElementById("form").action = "http://localhost:8080/";
+	document.getElementById("title link").href = "http://localhost:8000/gbic-ajob1.html";
 }
 
 </script>
@@ -87,6 +90,9 @@ if (window.location.hostname == "localhost") {
 	width: 75%;
 	word-wrap: break-word;
 	overflow-x: hidden;
+}
+#description {
+	font-size: 75%;
 }
 .bar {
 	border-top: 3px solid rgb(200, 200, 200);

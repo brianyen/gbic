@@ -2,6 +2,7 @@ from jinja2 import Template
 import json
 import os
 import urllib
+import datetime
 
 def render(url):    
     out_dir = urllib.parse.quote_plus(url)
@@ -29,12 +30,25 @@ def render(url):
     except FileNotFoundError:
         errors = ""   
 
+    try:
+        with open(out_dir + '/vid.info.json') as f:
+            info = f.read()
+
+        metadata = json.loads(info)
+    except FileNotFoundError:
+        metadata = {
+            "fulltitle": "",
+            "uploader": "",
+            "duration": 0,
+            "description": ""
+        }
+
     with open('html.tmpl') as q:
         html = q.read()
 
     t = Template(html)
 
-    return t.render(slides=slides, url=url, errors=errors, out_dir=out_dir)
+    return t.render(slides=slides, url=url, errors=errors, out_dir=out_dir, title=metadata["fulltitle"], creator=metadata["uploader"], duration=datetime.timedelta(seconds=metadata["duration"]), description=metadata["description"])
  
 def convert_url(request):
     """Responds to any HTTP request.
