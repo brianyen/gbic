@@ -1,32 +1,38 @@
-pip install = py -m pip install
--------
+personal NOTE: pip install = py -m pip install
 
-py server.py > output.html (in gbic folder) to update
+IGNORE: py server.py > output.html (in gbic folder) to update
 
-(in google cloud shell)
-	gsutil cp [location] gs://[bucket name]/ => pushing files into google cloud storage
+PUSHING FILES TO GOOGLE CLOUD STORAGE:
+	(in google cloud shell)
+	gsutil cp [location] gs://[bucket name]/
 	ex:
 		gsutil cp gbic-ajob1.html gs://gbic/
 
-cd .. => go up by a directory
+personal NOTE: cd .. => go up by a directory
 
-(in google cloud shell)
+PUSHING FUNCTIONS TO GOOGLE CLOUD FUNCTIONS:
+	(in google cloud shell)
 	gcloud functions deploy hello_world --runtime python38 --trigger-http --allow-unauthenticated
 
-py -m venv env
+personal NOTE:
+	py -m venv env
 
-		setting up local host servers
+SETTING UP LOCAL HOST:
 
-(all within the correct directory)
+	NOTE: two separate command shells
+	NOTE: be in correct directory
 
-1.
+	1.
 	.\env\Scripts\activate ((in both shells))
 
-2.
+	2.
 	functions-framework --target convert_url --debug
+		NOTE: need to install functions-framework if haven't yet
 
-3. 
+	3. 
 	py -m http.server
+		NOTE: in 2nd shell
 
-(^gbic-ajob1.html in localhost:8000)
-(^main.py in localhost:8080)
+	NOTE:
+	^gbic-ajob1.html in localhost:8000
+	^main.py in localhost:8080
