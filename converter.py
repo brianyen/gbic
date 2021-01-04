@@ -5,9 +5,7 @@ import shutil
 import json
 import math
 import datetime
-import youtube_dl
 import sys
-#from youtube_dl import YoutubeDL
 
 download_url = sys.argv[1]
 out_dir = sys.argv[2]
