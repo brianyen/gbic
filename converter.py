@@ -11,6 +11,8 @@ from youtube_dl import YoutubeDL
 
 download_url = sys.argv[1]
 out_dir = sys.argv[2]
+ytdl_prefix = sys.argv[3]
+
 
 #long video
 #download_url = "https://www.youtube.com/watch?v=R44tKAPpKOM"
@@ -66,24 +68,24 @@ def main(url):
     #convert_subtitles_to_transcript(subtitles)"""
 
 def get_video_duration(url):
-    stream = os.popen('./youtube-dlc --get-duration ' + url)
+    stream = os.popen(ytdl_prefix + 'youtube-dlc --get-duration ' + url)
     output = stream.read()
     duration = get_sec(output)
     return duration
 
 def get_video_info(url):
-    stream = os.popen('./youtube-dlc -o "' + out_dir + '/vid" --write-info-json --skip-download ' + url)
+    stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + out_dir + '/vid" --write-info-json --skip-download ' + url)
     output = stream.read()
     return output
 
 def get_subtitles(url):
-	stream = os.popen('./youtube-dlc -o "' + temp_dir.name + '/subs" --write-auto-sub --sub-format json3 --skip-download ' + url)
+	stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir.name + '/subs" --write-auto-sub --sub-format json3 --skip-download ' + url)
 	output = stream.read()
 	return output
 
 def convert_range_to_mp4(url, instance):
     start_time = 300 * instance
-    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(./youtube-dlc -f 22 -g ' + url + ') -acodec copy -vcodec copy -t 300 ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
+    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 22 -g ' + url + ') -acodec copy -vcodec copy -t 300 ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
     output = stream.read()
     return output
 
