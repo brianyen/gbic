@@ -7,7 +7,7 @@ import datetime
 def render(url):    
     out_dir = urllib.parse.quote_plus(url)
     out_dir = out_dir.replace("%", "-")
-    stream = os.popen('python3 converter.py ' + url + ' ' + out_dir + ' ./')
+    stream = os.popen('python3 converter.py ' + url + ' ' + out_dir + ' ""')
     output = stream.read()
 
     slides = []
