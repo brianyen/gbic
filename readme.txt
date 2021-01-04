@@ -6,13 +6,13 @@ PUSHING FILES TO GOOGLE CLOUD STORAGE:
 	(in google cloud shell)
 	gsutil cp [location] gs://[bucket name]/
 	ex:
-		gsutil cp gbic-ajob1.html gs://gbic/
+		gsutil cp index.html gs://gbic/
 
 personal NOTE: cd .. => go up by a directory
 
 PUSHING FUNCTIONS TO GOOGLE CLOUD FUNCTIONS:
 	(in google cloud shell)
-	gcloud functions deploy hello_world --runtime python38 --trigger-http --allow-unauthenticated
+	gcloud functions deploy convert_url --runtime python38 --trigger-http --allow-unauthenticated
 
 personal NOTE:
 	py -m venv env
