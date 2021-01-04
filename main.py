@@ -49,3 +49,6 @@ def convert_url(request):
         return render(request.args.get('url'))
     else:
         return "nothing"
+
+def hello(request):
+    return "Hello World!"
