@@ -37,9 +37,9 @@ def raiseError(message):
     sys.exit()
 
 def main(url):
-
     duration = get_video_duration(url)
     verify_video_length(duration)
+    print(duration)
 
     instances = math.floor(duration / 300) + 1
     get_subtitles(url)
