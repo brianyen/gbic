@@ -20,7 +20,7 @@ ytdl_prefix = sys.argv[3]
 
 gcs_client = storage.Client(project='gbic')
 bucket = gcs_client.get_bucket('www.tubeslides.net')
-blob = bucket.blob('www.tubeslides.net/v/' + out_dir)
+blob = bucket.blob('v/' + out_dir)
 
 blob.upload_from_string('', content_type='application/x-www-form-urlencoded;charset=UTF-8')
 
