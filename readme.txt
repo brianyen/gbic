@@ -6,7 +6,7 @@ PUSHING FILES TO GOOGLE CLOUD STORAGE:
 	(in google cloud shell)
 	gsutil cp [location] gs://[bucket name]/
 	ex:
-		gsutil cp index.html gs://gbic/
+		gsutil cp index.html gs://www.tubeslides.net/
 
 personal NOTE: cd .. => go up by a directory
 
@@ -34,5 +34,5 @@ SETTING UP LOCAL HOST:
 		NOTE: in 2nd shell
 
 	NOTE:
-	^gbic-ajob1.html in localhost:8000
+	^index.html in localhost:8000
 	^main.py in localhost:8080
