@@ -2,7 +2,7 @@
 <html>
 <body id="body">
 <div id="title">
-	<h1><a id="title link" href="">tubeslides</a></h1>
+	<h1><a id="titlelink" href="/">tubeslides</a></h1>
 </div>
 
 <div style="display: flex">
@@ -56,13 +56,17 @@
 <script>
 if (window.location.hostname == "localhost") {
 	document.getElementById("form").action = "http://localhost:8080/";
-	document.getElementById("title link").href = "http://localhost:8000/index.html";
+	document.getElementById("titlelink").href = "http://localhost:8000/index.html";
 }
 
 </script>
 
 </body>
 <style>
+#titlelink {
+	text-decoration: none;
+	color: black;
+}
 #body {
 	margin: 0px;
 }
