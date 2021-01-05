@@ -8,9 +8,9 @@ import datetime
 import sys
 from google.cloud import storage
 
-download_url = sys.argv[1]
-out_dir = sys.argv[2]
-ytdl_prefix = sys.argv[3]
+#download_url = sys.argv[1]
+out_dir = "r"#sys.argv[2]
+ytdl_prefix = ""#sys.argv[3]
 def implicit():
     from google.cloud import storage
 
@@ -256,4 +256,4 @@ def upload_to_bucket(blob_name, path_to_file, bucket_name):
 
 ##############################################################
 
-main(download_url)
+#main(download_url)
