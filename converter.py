@@ -29,12 +29,13 @@ implicit()
 
 #short video
 #download_url = "https://www.youtube.com/watch?v=4rA9E2FuLkU"
-
+"""
 gcs_client = storage.Client(project='gbic')
 bucket = gcs_client.get_bucket('www.tubeslides.net')
 blob = bucket.blob('v/' + out_dir)
 
 blob.upload_from_string('', content_type='application/x-www-form-urlencoded;charset=UTF-8')
+"""
 
 temp_dir = tempfile.TemporaryDirectory()
 #out_dir = temp_dir.name
