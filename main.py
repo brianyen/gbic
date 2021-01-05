@@ -64,5 +64,8 @@ def convert_url(request):
     else:
         return "nothing"
 
-def hello(request):
-    return "Hello World!"
+def alex(request):
+    if request.args and 'url' in request.args:
+        return render(request.args.get('url'))
+    else:
+        return "nothing2"
