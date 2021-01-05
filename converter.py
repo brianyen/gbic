@@ -6,6 +6,7 @@ import json
 import math
 import datetime
 import sys
+from google.cloud import storage
 
 download_url = sys.argv[1]
 out_dir = sys.argv[2]
@@ -16,6 +17,12 @@ ytdl_prefix = sys.argv[3]
 
 #short video
 #download_url = "https://www.youtube.com/watch?v=4rA9E2FuLkU"
+
+gcs_client = storage.Client(project='gbic')
+bucket = gcs_client.get_bucket('www.tubeslides.net')
+blob = bucket.blob('www.tubeslides.net/v/' + out_dir)
+
+blob.upload_from_string('', content_type='application/x-www-form-urlencoded;charset=UTF-8')
 
 temp_dir = tempfile.TemporaryDirectory()
 #out_dir = temp_dir.name
@@ -215,11 +222,22 @@ def add_punctuation(transcript):
 
 ##############################################################
 
-class Error(Exception):
-    pass
+def upload_to_bucket(blob_name, path_to_file, bucket_name):
+    """ Upload data to a bucket"""
 
-class VideoTooLongError():
-    pass
+    # Explicitly use service account credentials by specifying the private key
+    # file.
+    storage_client = storage.Client.from_service_account_json(
+        'creds.json')
+
+    #print(buckets = list(storage_client.list_buckets())
+
+    bucket = storage_client.get_bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+    blob.upload_from_filename(path_to_file)
+
+    #returns a public url
+    return blob.public_url
 
 ##############################################################
 
