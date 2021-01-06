@@ -102,6 +102,7 @@ def convert_range_to_mp4(url, instance):
 def get_iframes(instance, path):
     #change min_frame_diff based on video runtime
     timestamps = get_iframes_ts(instance)
+    print(timestamps)
 
     min_frame_diff = 5
     last_ts = -math.inf
@@ -114,9 +115,7 @@ def get_iframes(instance, path):
         #make ffmpeg output "output.png" and rename it afterwards
         stream = os.popen('ffmpeg -ss ' + str(ts - (instance * 300)) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
         upload('clip-' + str(instance).zfill(3) + '/slide-' + hms_ts + '.png')
-        os.system('ls ' + temp_dir.name)
-        #os.rename(temp_dir.name + '/output.png', path + '/slide-' + hms_ts + '.png')
-        os.system('ls ' + path)
+
        	for i in range (10):
        		print(" ")
         output = stream.read()
@@ -242,12 +241,16 @@ def upload(file):
 
     # Get the bucket that the file will be uploaded to.
     bucket = gcs.get_bucket('www.tubeslides.net')
+    print('hi bucket')
 
     # Create a new blob and upload the file's content.
-    blob = bucket.blob('v/' + out_dir + '/')
+    blob = bucket.blob('v/' + out_dir + '/' + file)
+    print('hi blob')
 
     with open(temp_dir.name + '/' + file) as f:
+        print(f.name)
         blob.upload_from_file(f)
+        print('success!')
 
     """
     blob.upload_from_string(
