@@ -249,11 +249,12 @@ def upload(file):
     with open(temp_dir.name + '/' + file) as f:
         blob.upload_from_file(f)
 
+    """
     blob.upload_from_string(
         uploaded_file.read(),
         content_type=uploaded_file.content_type
     )
-
+    """
     # The public URL can be used to directly access the uploaded file via HTTP.
     return blob.public_url
 
