@@ -9,20 +9,8 @@ import sys
 from google.cloud import storage
 
 #download_url = sys.argv[1]
-out_dir = "r"#sys.argv[2]
-ytdl_prefix = ""#sys.argv[3]
-def implicit():
-    from google.cloud import storage
-
-    # If you don't specify credentials when constructing the client, the
-    # client library will look for credentials in the environment.
-    storage_client = storage.Client()
-
-    # Make an authenticated API request
-    buckets = list(storage_client.list_buckets())
-    print(buckets)
-
-implicit()
+out_dir = "test"#sys.argv[2]
+ytdl_prefix = ""#sys.argv[3
 
 #long video
 #download_url = "https://www.youtube.com/watch?v=R44tKAPpKOM"
@@ -44,9 +32,10 @@ print(temp_dir.name)
 ##############################################################
 
 def raiseError(message):
-    file = open(out_dir + '/error.txt', "w")
+    file = open(temp_dir.name + '/error.txt', "w")
     file.write(message)
     file.close()
+    upload('error.txt')
     sys.exit()
 
 def main(url):
@@ -61,15 +50,16 @@ def main(url):
     get_video_info(url)
 
     #Change temp_dir.name to output directory (video ID)
-    os.makedirs(out_dir, exist_ok=True)
-    file = open(out_dir + '/subtitles.json', 'w')
+    create_folder()
+    file = open(temp_dir.name + '/subtitles.json', 'w')
     file.write(str(subtitles))
     file.close()
+    upload('subtitles.json')
 
     for i in range(instances):
         directory = 'clip-' + str(i).zfill(3)
         #Change temp_dir.name to output directory (video ID)
-        path = os.path.join(out_dir, directory)
+        path = os.path.join(temp_dir.name, directory)
         os.makedirs(path, exist_ok=True)
         convert_range_to_mp4(url, i)
         frames, fixed_timestamps = get_iframes(i, path)
@@ -79,9 +69,11 @@ def main(url):
         file = open(path + '/slides.json', 'w')
         file.write(slides_json)
         file.close()
+        upload(directory + '/slides.json')
     #Change temp_dir.name to output directory (video ID)
-    file = open(out_dir + '/done.txt', "x")
+    file = open(temp_dir.name + '/done.txt', "x")
     file.close()
+    upload('done.txt')
     #convert_subtitles_to_transcript(subtitles)"""
 
 def get_video_duration(url):
@@ -91,8 +83,9 @@ def get_video_duration(url):
     return duration
 
 def get_video_info(url):
-    stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + out_dir + '/vid" --write-info-json --skip-download ' + url)
+    stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir.name + '/vid" --write-info-json --skip-download ' + url)
     output = stream.read()
+    upload('vid.info.json')
     return output
 
 def get_subtitles(url):
@@ -120,6 +113,7 @@ def get_iframes(instance, path):
         hms_ts = convert_s_to_hms(round(ts))
         #make ffmpeg output "output.png" and rename it afterwards
         stream = os.popen('ffmpeg -ss ' + str(ts - (instance * 300)) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
+        upload('clip-' + str(instance).zfill(3) + '/slide-' + hms_ts + '.png')
         os.system('ls ' + temp_dir.name)
         #os.rename(temp_dir.name + '/output.png', path + '/slide-' + hms_ts + '.png')
         os.system('ls ' + path)
@@ -234,6 +228,34 @@ def add_punctuation(transcript):
     #return fastpunct.punct([transcript], batch_size=32)
 
 ##############################################################
+
+def create_folder():
+    gcs = storage.Client()
+    bucket = gcs.get_bucket('www.tubeslides.net')
+    blob = bucket.blob('v/')
+
+    blob.upload_from_string(out_dir, content_type='application/x-www-form-urlencoded;charset=UTF-8')
+
+def upload(file):
+    # Create a Cloud Storage client.
+    gcs = storage.Client()
+
+    # Get the bucket that the file will be uploaded to.
+    bucket = gcs.get_bucket('www.tubeslides.net')
+
+    # Create a new blob and upload the file's content.
+    blob = bucket.blob('v/' + out_dir + '/')
+
+    with open(temp_dir.name + '/' + file) as f:
+        blob.upload_from_file(f)
+
+    blob.upload_from_string(
+        uploaded_file.read(),
+        content_type=uploaded_file.content_type
+    )
+
+    # The public URL can be used to directly access the uploaded file via HTTP.
+    return blob.public_url
 
 def upload_to_bucket(blob_name, path_to_file, bucket_name):
     """ Upload data to a bucket"""

@@ -2,3 +2,4 @@ functions-framework==2.1.0
 youtube-dlc
 google.cloud
 google-cloud-storage
+Flask==1.1.2
