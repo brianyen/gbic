@@ -3,12 +3,15 @@ import json
 import os
 import urllib
 import datetime
+import converter
+import base64
 
 def render(url):    
     out_dir = urllib.parse.quote_plus(url)
     out_dir = out_dir.replace("%", "-")
     stream = os.popen('python3 converter.py ' + url + ' ' + out_dir + ' ""')
     output = stream.read()
+    print(output)
 
     slides = []
     i = 0
@@ -66,6 +69,19 @@ def convert_url(request):
 
 def alex(request):
     if request.args and 'url' in request.args:
-        return render(request.args.get('url'))
+        return converter.main(request.args.get('url'))
     else:
         return "nothing2"
+
+def convert_url_sub(event, context):
+    """Triggered from a message on a Cloud Pub/Sub topic.
+    Args:
+         event (dict): Event payload.
+         context (google.cloud.functions.Context): Metadata for the event.
+    """
+    data = base64.b64decode(event['data']).decode('utf-8')
+    data_dict = json.loads(data)
+    if data:
+        return converter.main(data_dict.get("url"), data_dict.get("out_dir"))
+    else:
+        return "nothing3"
