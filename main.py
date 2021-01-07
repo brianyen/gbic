@@ -80,7 +80,8 @@ def convert_url_sub(event, context):
          context (google.cloud.functions.Context): Metadata for the event.
     """
     data = base64.b64decode(event['data']).decode('utf-8')
+    data_dict = json.loads(data)
     if data:
-        return converter.main(data)
+        return converter.main(data_dict.get("url"), data_dict.get("out_dir"))
     else:
         return "nothing3"

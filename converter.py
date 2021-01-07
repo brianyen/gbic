@@ -46,7 +46,9 @@ def raiseError(message):
     upload('error.txt')
     sys.exit()
 
-def main(url):
+def main(url, out):
+    global out_dir
+    out_dir = out
     print('getting vid info')
     get_video_info(url)
     print('vid info get')
