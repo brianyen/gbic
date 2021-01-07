@@ -2,7 +2,7 @@
 <html>
 <body id="body">
 <div id="title">
-	<h1><a id="title link" href="">tubeslides</a></h1>
+	<h1><a id="titlelink" href="/">tubeslides</a></h1>
 </div>
 
 <div style="display: flex">
@@ -33,9 +33,7 @@
     <div>
 		<!-- <p class="paragraph" style="margin-top: 5px; margin-bottom: 5px">{{ slide.ts }}</p> -->
 		<div class="group">
-			<div class="column">
-				<img class="slide" src="http://localhost:8000/{{ out_dir }}/{{ slide.png }}" alt="placeholder image">
-			</div>
+			<img class="slide" src="http://localhost:8000/{{ out_dir }}/{{ slide.png }}" alt="placeholder image">
 			<div class="column">
 				{% for line in slide.text %}
 					<p class='paragraph'> <span class="timestamp">{{ line.ts }}:</span> {{ line.text }} </p>
@@ -56,13 +54,17 @@
 <script>
 if (window.location.hostname == "localhost") {
 	document.getElementById("form").action = "http://localhost:8080/";
-	document.getElementById("title link").href = "http://localhost:8000/index.html";
+	document.getElementById("titlelink").href = "http://localhost:8000/index.html";
 }
 
 </script>
 
 </body>
 <style>
+#titlelink {
+	text-decoration: none;
+	color: black;
+}
 #body {
 	margin: 0px;
 }
@@ -71,7 +73,6 @@ if (window.location.hostname == "localhost") {
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 	padding: 1px;
 	font-size: 25px;
-	background-color: rgb(185, 185, 255);
 }
 #search {
 	text-align: right;
@@ -79,7 +80,7 @@ if (window.location.hostname == "localhost") {
 	width: 25%;
 }
 #input {
-	width: 250px;
+	width: 80%;
 }
 #metadata {
 	padding: 0.5%;
@@ -94,6 +95,9 @@ if (window.location.hostname == "localhost") {
 #description {
 	font-size: 75%;
 }
+#form {
+	display: flex;
+}
 .bar {
 	border-top: 3px solid rgb(200, 200, 200);
 	padding: 0px;
@@ -102,17 +106,13 @@ if (window.location.hostname == "localhost") {
 }
 .group {
 	padding-bottom: 10px;
-	display: flex;
-}
-div.column {
-	width: 50%;
 }
 .slide {
-	margin: 5%;
-	width: 90%;
+	width: 100%;
 	position: sticky;
-	top: 20px;
-	border: 3px solid rgb(200, 200, 200);
+	top: 0px;
+	border-bottom: 3px solid rgb(200, 200, 200);
+	background-color: white;
 }
 .paragraph {
 	margin: 5%;
@@ -132,6 +132,22 @@ div.column {
 	margin-left: 5%;
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 	color: rgb(225, 40, 40);
+}
+@media only screen and (min-width: 768px) {
+	.group {
+		display: flex;
+	}
+	div.column {
+		width: 50%;
+	}
+	.slide {
+		width: 40%;
+		height: 100%;
+		top: 20px;
+		margin: 5%;
+		margin-top: 0px;
+		border: 3px solid rgb(200, 200, 200);
+	}
 }
 </style>
 </html>
