@@ -8,11 +8,11 @@ import datetime
 import sys
 from google.cloud import storage
 
-clip_length = 60.0
+clip_length = 600.0
 max_vid_length = 7200
 
 #download_url = sys.argv[1]
-out_dir = "test"#sys.argv[2]
+out_dir = "test1"#sys.argv[2]
 ytdl_prefix = ""#sys.argv[3
 
 print('storage client')
@@ -76,7 +76,6 @@ def main(url):
         convert_range_to_mp4(url, i)
         frames, fixed_timestamps = get_iframes(i, path)
         slides_json = construct_json_file(i, fixed_timestamps, frames, subtitles)
-        print(slides_json)
 
         file = open(path + '/slides.json', 'w')
         file.write(slides_json)
@@ -107,9 +106,11 @@ def get_subtitles(url):
 	return output
 
 def convert_range_to_mp4(url, instance):
+    print("start downloading vid " + str(instance))
     start_time = clip_length * instance
-    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 22 -g ' + url + ') -acodec copy -vcodec copy -t 60 ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
+    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 22 -g ' + url + ') -acodec copy -vcodec copy -t ' + str(clip_length) + ' ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
     output = stream.read()
+    print("finished downloading vid")
     return output
 
 def get_iframes(instance, path):
@@ -132,8 +133,6 @@ def get_iframes(instance, path):
             pass
         upload('clip-' + str(instance).zfill(3) + '/slide-' + hms_ts + '.png')
 
-       	for i in range (10):
-       		print(" ")
         frames.append('clip-' + str(instance).zfill(3) + '/slide-' + hms_ts + '.png')
         fixed_timestamps.append(ts)
         last_ts = ts
@@ -179,11 +178,12 @@ def construct_json_file(instance, timestamps, frames, subtitles):
     current_line_ts = 0
     start_time = instance * clip_length
     for i in range(0, num_frames):
+        print(frames[i])
         time_rounded = round(timestamps[i])
         text_dict = []
         while current_line_ts < timestamps[i + 1] and line_num < len(subtitles) and current_line_ts < start_time + clip_length:
             line_timestamp = subtitles[line_num]['timestamp']
-            if line_timestamp > start_time:
+            if line_timestamp > start_time and line_timestamp < start_time + clip_length:
                 lines = {
                     "ts": convert_s_to_hms(round(line_timestamp)),
                     "text": subtitles[line_num]['sentence']
@@ -197,6 +197,7 @@ def construct_json_file(instance, timestamps, frames, subtitles):
             "png": frames[i],
             "text": text_dict
         }
+        print(iframe)
         converted_dict.append(iframe)
     return json.dumps(converted_dict, indent=4)
 
