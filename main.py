@@ -4,6 +4,7 @@ import os
 import urllib
 import datetime
 import converter
+import base64
 
 def render(url):    
     out_dir = urllib.parse.quote_plus(url)
@@ -71,3 +72,15 @@ def alex(request):
         return converter.main(request.args.get('url'))
     else:
         return "nothing2"
+
+def convert_url_sub(event, context):
+    """Triggered from a message on a Cloud Pub/Sub topic.
+    Args:
+         event (dict): Event payload.
+         context (google.cloud.functions.Context): Metadata for the event.
+    """
+    data = base64.b64decode(event['data']).decode('utf-8')
+    if data:
+        return converter.main(data)
+    else:
+        return "nothing3"

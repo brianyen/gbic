@@ -8,9 +8,17 @@ import datetime
 import sys
 from google.cloud import storage
 
+clip_length = 60.0
+max_vid_length = 7200
+
 #download_url = sys.argv[1]
 out_dir = "test"#sys.argv[2]
 ytdl_prefix = ""#sys.argv[3
+
+print('storage client')
+gcs = storage.Client()
+bucket = gcs.get_bucket('www.tubeslides.net')
+print('storage client done')
 
 #long video
 #download_url = "https://www.youtube.com/watch?v=R44tKAPpKOM"
@@ -39,18 +47,22 @@ def raiseError(message):
     sys.exit()
 
 def main(url):
+    print('getting vid info')
+    get_video_info(url)
+    print('vid info get')
+
+    print('getting video duration')
     duration = get_video_duration(url)
     verify_video_length(duration)
-    print(duration)
+    print('duration:' + str(duration))
 
-    instances = math.floor(duration / 300) + 1
+    print('getting subtitles')
+    instances = math.floor(duration / clip_length) + 1
     get_subtitles(url)
     subtitles = get_subtitles_with_ts()
-
-    get_video_info(url)
+    print('subtitles get')
 
     #Change temp_dir.name to output directory (video ID)
-    create_folder()
     file = open(temp_dir.name + '/subtitles.json', 'w')
     file.write(str(subtitles))
     file.close()
@@ -77,10 +89,11 @@ def main(url):
     #convert_subtitles_to_transcript(subtitles)"""
 
 def get_video_duration(url):
-    stream = os.popen(ytdl_prefix + 'youtube-dlc --get-duration ' + url)
-    output = stream.read()
-    duration = get_sec(output)
-    return duration
+    with open(temp_dir.name + '/vid.info.json', 'r') as f:
+        info = f.read()
+    info_dict = json.loads(info)
+    duration = info_dict.get("duration")
+    return int(duration)
 
 def get_video_info(url):
     stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir.name + '/vid" --write-info-json --skip-download ' + url)
@@ -94,13 +107,14 @@ def get_subtitles(url):
 	return output
 
 def convert_range_to_mp4(url, instance):
-    start_time = 300 * instance
-    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 22 -g ' + url + ') -acodec copy -vcodec copy -t 300 ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
+    start_time = clip_length * instance
+    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 22 -g ' + url + ') -acodec copy -vcodec copy -t 60 ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
     output = stream.read()
     return output
 
 def get_iframes(instance, path):
     #change min_frame_diff based on video runtime
+    print('getting timestamps')
     timestamps = get_iframes_ts(instance)
     print(timestamps)
 
@@ -113,12 +127,13 @@ def get_iframes(instance, path):
             continue
         hms_ts = convert_s_to_hms(round(ts))
         #make ffmpeg output "output.png" and rename it afterwards
-        stream = os.popen('ffmpeg -ss ' + str(ts - (instance * 300)) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
+        stream = os.popen('ffmpeg -ss ' + str(ts - (instance * clip_length)) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
+        while stream.read() != '':
+            pass
         upload('clip-' + str(instance).zfill(3) + '/slide-' + hms_ts + '.png')
 
        	for i in range (10):
        		print(" ")
-        output = stream.read()
         frames.append('clip-' + str(instance).zfill(3) + '/slide-' + hms_ts + '.png')
         fixed_timestamps.append(ts)
         last_ts = ts
@@ -130,7 +145,7 @@ def get_iframes_ts(instance):
     metadata = output[output.index("{"):]
     metadata_dict = json.loads(metadata)
     timestamps = []
-    start_time = instance * 300.0
+    start_time = instance * clip_length
     timestamps.append(start_time)
 
     for frame in metadata_dict['frames']:
@@ -162,11 +177,11 @@ def construct_json_file(instance, timestamps, frames, subtitles):
     converted_dict = []
     line_num = 0
     current_line_ts = 0
-    start_time = instance * 300
+    start_time = instance * clip_length
     for i in range(0, num_frames):
         time_rounded = round(timestamps[i])
         text_dict = []
-        while current_line_ts < timestamps[i + 1] and line_num < len(subtitles) and current_line_ts < start_time + 300:
+        while current_line_ts < timestamps[i + 1] and line_num < len(subtitles) and current_line_ts < start_time + clip_length:
             line_timestamp = subtitles[line_num]['timestamp']
             if line_timestamp > start_time:
                 lines = {
@@ -186,7 +201,7 @@ def construct_json_file(instance, timestamps, frames, subtitles):
     return json.dumps(converted_dict, indent=4)
 
 def verify_video_length(duration):
-    if duration > 7200:
+    if duration > max_vid_length:
         raiseError("Video too long! Can only process videos shorter than 2 hours.")
 
 def convert_ms_to_s(x):
@@ -228,29 +243,13 @@ def add_punctuation(transcript):
 
 ##############################################################
 
-def create_folder():
-    gcs = storage.Client()
-    bucket = gcs.get_bucket('www.tubeslides.net')
-    blob = bucket.blob('v/')
-
-    blob.upload_from_string(out_dir, content_type='application/x-www-form-urlencoded;charset=UTF-8')
-
 def upload(file):
-    # Create a Cloud Storage client.
-    gcs = storage.Client()
-
-    # Get the bucket that the file will be uploaded to.
-    bucket = gcs.get_bucket('www.tubeslides.net')
-    print('hi bucket')
-
     # Create a new blob and upload the file's content.
     blob = bucket.blob('v/' + out_dir + '/' + file)
-    print('hi blob')
 
-    with open(temp_dir.name + '/' + file) as f:
-        print(f.name)
-        blob.upload_from_file(f)
-        print('success!')
+    print('uploading ' + temp_dir.name + '/' + file + ' to ' + out_dir)
+    blob.upload_from_filename(temp_dir.name + '/' + file)
+    print('success! uploaded ' + temp_dir.name + '/' + file)
 
     """
     blob.upload_from_string(
