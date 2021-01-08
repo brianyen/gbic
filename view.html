@@ -6,11 +6,11 @@
 
 <div style="display: flex">
 	<div id="metadata">
-		<div id="m-url"><b>Video URL:</b> <a href=""></a></div>
-        <div id="m-title"><b>Title:</b></div>
-		<div id="m-creator"><b>Creator:</b></div>
-		<div id="m-length"><b>Video Length:</b></div>
-		<div id="description"><b>Description:</b></div>	
+		<div id="m-url"></div>
+        <div id="m-title"></div>
+		<div id="m-creator"></div>
+		<div id="m-length"></div>
+		<div id="description"></div>	
 	</div>
 	<div id="search">
 		<form id="form" action="/convert_url">
@@ -22,9 +22,9 @@
 
 <div class="bar" style="margin-top: 0px"></div>
 
-<div id="output">
+<div id="output"></div> 
 
-</div> 
+<div class="loader"></div>
 
 </body>
 <script>
@@ -54,15 +54,14 @@ fetch("/v/" + id + "/vid.info.json")
 }))
 
 function processClip(i) {
-    var clip = ('0000'+i).slice(-3);
+	var clip = ('0000'+i).slice(-3);
+	console.log(clip)
     fetch("/v/" + id + "/clip-" + clip + "/slides.json")
     .then(response => response.json().then(function(data) {
-        // console.log(data);
         for (let slide of data) {
-        //     console.log(slide);
             var el = document.createElement("div")
             el.className = "group"
-            s = '<img class="slide" src="/v/' +  id + '/' + slide.png + '">'
+            var s = '<img class="slide" src="/v/' +  id + '/' + slide.png + '">'
             s = s + '<div class="column">'
             for (let x of slide.text) {
                 s = s + '<p class="paragraph"> <span class="timestamp">' + x.ts + ':</span> ' + x.text + '</p>'
@@ -74,9 +73,9 @@ function processClip(i) {
             bar.className = "bar"
 
             outputEl.appendChild(el)
-            outputEl.appendChild(bar)
-            processClip(i+1)
-        }
+			outputEl.appendChild(bar)
+		}
+        processClip(i+1)
     }))
 }
 processClip(0);
@@ -155,6 +154,21 @@ processClip(0);
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 	color: rgb(225, 40, 40);
 }
+.loader {
+  border: 16px solid #e0d9d9; /* Light grey */
+  border-top: 16px solid #434647; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @media only screen and (min-width: 768px) {
 	.group {
 		display: flex;
