@@ -28,7 +28,8 @@
 
 </body>
 <script>
-var id = "test"
+const urlParams = new URLSearchParams(window.location.search);
+const id = urlParams.get('out_dir');
 
 outputEl = document.getElementById("output")
 
@@ -57,7 +58,8 @@ function processClip(i) {
 	var clip = ('0000'+i).slice(-3);
 	console.log(clip)
     fetch("/v/" + id + "/clip-" + clip + "/slides.json")
-    .then(response => response.json().then(function(data) {
+	.then(response => response.json())
+	.then(function(data) {
         for (let slide of data) {
             var el = document.createElement("div")
             el.className = "group"
@@ -76,7 +78,10 @@ function processClip(i) {
 			outputEl.appendChild(bar)
 		}
         processClip(i+1)
-    }))
+	})
+	.catch((error) => {
+		
+	})
 }
 processClip(0);
 

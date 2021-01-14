@@ -7,6 +7,7 @@ PUSHING FILES TO GOOGLE CLOUD STORAGE:
 	gsutil cp [location] gs://[bucket name]/
 	ex:
 		gsutil cp index.html gs://www.tubeslides.net/
+		gsutil cp view.html gs://www.tubeslides.net/
 
 personal NOTE: cd .. => go up by a directory
 
