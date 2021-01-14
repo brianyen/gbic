@@ -8,7 +8,7 @@ import datetime
 import sys
 from google.cloud import storage
 
-clip_length = 600.0
+clip_length = 300.0
 max_vid_length = 7200
 
 #download_url = sys.argv[1]
@@ -33,81 +33,79 @@ blob = bucket.blob('v/' + out_dir)
 blob.upload_from_string('', content_type='application/x-www-form-urlencoded;charset=UTF-8')
 """
 
-temp_dir = tempfile.TemporaryDirectory()
-#out_dir = temp_dir.name
-print(temp_dir.name)
-
 ##############################################################
 
-def raiseError(message):
+def raiseError(message, temp_dir, out_dir):
     file = open(temp_dir.name + '/error.txt', "w")
     file.write(message)
     file.close()
-    upload('error.txt')
+    upload('error.txt', temp_dir, out_dir)
     sys.exit()
 
 def main(url, out):
-    global out_dir
+    temp_dir = tempfile.TemporaryDirectory()
+    #out_dir = temp_dir.name
+    print(temp_dir.name)
     out_dir = out
     print('getting vid info')
-    get_video_info(url)
+    get_video_info(url, temp_dir, out_dir)
     print('vid info get')
 
     print('getting video duration')
-    duration = get_video_duration(url)
-    verify_video_length(duration)
+    duration = get_video_duration(url, temp_dir)
+    verify_video_length(duration, temp_dir, out_dir)
     print('duration:' + str(duration))
 
     print('getting subtitles')
     instances = math.floor(duration / clip_length) + 1
-    get_subtitles(url)
-    subtitles = get_subtitles_with_ts()
+    get_subtitles(url, temp_dir)
+    subtitles = get_subtitles_with_ts(temp_dir)
     print('subtitles get')
 
     #Change temp_dir.name to output directory (video ID)
     file = open(temp_dir.name + '/subtitles.json', 'w')
     file.write(str(subtitles))
     file.close()
-    upload('subtitles.json')
+    upload('subtitles.json', temp_dir, out_dir)
 
     for i in range(instances):
         directory = 'clip-' + str(i).zfill(3)
         #Change temp_dir.name to output directory (video ID)
         path = os.path.join(temp_dir.name, directory)
         os.makedirs(path, exist_ok=True)
-        convert_range_to_mp4(url, i)
-        frames, fixed_timestamps = get_iframes(i, path)
+        convert_range_to_mp4(url, i, temp_dir)
+        frames, fixed_timestamps = get_iframes(i, path, temp_dir, out_dir)
         slides_json = construct_json_file(i, fixed_timestamps, frames, subtitles)
 
         file = open(path + '/slides.json', 'w')
         file.write(slides_json)
         file.close()
-        upload(directory + '/slides.json')
+        upload(directory + '/slides.json', temp_dir, out_dir)
     #Change temp_dir.name to output directory (video ID)
     file = open(temp_dir.name + '/done.txt', "x")
     file.close()
-    upload('done.txt')
+    upload('done.txt', temp_dir, out_dir)
     #convert_subtitles_to_transcript(subtitles)"""
 
-def get_video_duration(url):
+def get_video_duration(url, temp_dir):
     with open(temp_dir.name + '/vid.info.json', 'r') as f:
         info = f.read()
     info_dict = json.loads(info)
     duration = info_dict.get("duration")
     return int(duration)
 
-def get_video_info(url):
+def get_video_info(url, temp_dir, out_dir):
     stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir.name + '/vid" --write-info-json --skip-download ' + url)
     output = stream.read()
-    upload('vid.info.json')
+    upload('vid.info.json', temp_dir, out_dir)
     return output
 
-def get_subtitles(url):
+def get_subtitles(url, temp_dir):
 	stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir.name + '/subs" --write-auto-sub --sub-format json3 --skip-download ' + url)
 	output = stream.read()
 	return output
 
-def convert_range_to_mp4(url, instance):
+def convert_range_to_mp4(url, instance, temp_dir):
     print("start downloading vid " + str(instance))
     start_time = clip_length * instance
     stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 22 -g ' + url + ') -acodec copy -vcodec copy -t ' + str(clip_length) + ' ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
@@ -115,10 +113,10 @@ def convert_range_to_mp4(url, instance):
     print("finished downloading vid")
     return output
 
-def get_iframes(instance, path):
+def get_iframes(instance, path, temp_dir, out_dir):
     #change min_frame_diff based on video runtime
     print('getting timestamps')
-    timestamps = get_iframes_ts(instance)
+    timestamps = get_iframes_ts(instance, temp_dir)
     print(timestamps)
 
     min_frame_diff = 5
@@ -133,14 +131,14 @@ def get_iframes(instance, path):
         stream = os.popen('ffmpeg -ss ' + str(ts - (instance * clip_length)) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
         while stream.read() != '':
             pass
-        upload('clip-' + str(instance).zfill(3) + '/slide-' + hms_ts + '.png')
+        upload('clip-' + str(instance).zfill(3) + '/slide-' + hms_ts + '.png', temp_dir, out_dir)
 
         frames.append('clip-' + str(instance).zfill(3) + '/slide-' + hms_ts + '.png')
         fixed_timestamps.append(ts)
         last_ts = ts
     return frames, fixed_timestamps
 
-def get_iframes_ts(instance):
+def get_iframes_ts(instance, temp_dir):
     stream = os.popen('ffprobe -show_frames -of json -f lavfi "movie=' + temp_dir.name + '/vid' + str(instance) + '.mp4,select=gt(scene\\,0.1)"')
     output = stream.read()
     metadata = output[output.index("{"):]
@@ -153,7 +151,7 @@ def get_iframes_ts(instance):
         timestamps.append(start_time + float(frame.get('best_effort_timestamp_time')))
     return timestamps
 
-def get_subtitles_with_ts():
+def get_subtitles_with_ts(temp_dir):
     with open(temp_dir.name + '/subs.en.json3', 'r') as f:
         subtitle_json = f.read()
     subtitle_dict = json.loads(subtitle_json)
@@ -203,9 +201,9 @@ def construct_json_file(instance, timestamps, frames, subtitles):
         converted_dict.append(iframe)
     return json.dumps(converted_dict, indent=4)
 
-def verify_video_length(duration):
+def verify_video_length(duration, temp_dir, out_dir):
     if duration > max_vid_length:
-        raiseError("Video too long! Can only process videos shorter than 2 hours.")
+        raiseError("Video too long! Can only process videos shorter than 2 hours.", temp_dir, out_dir)
 
 def convert_ms_to_s(x):
     return x / 1000.0
@@ -246,7 +244,7 @@ def add_punctuation(transcript):
 
 ##############################################################
 
-def upload(file):
+def upload(file, temp_dir, out_dir):
     # Create a new blob and upload the file's content.
     blob = bucket.blob('v/' + out_dir + '/' + file)
 

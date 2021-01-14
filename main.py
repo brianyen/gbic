@@ -5,6 +5,9 @@ import urllib
 import datetime
 import converter
 import base64
+import re
+import flask
+from google.cloud import pubsub_v1
 
 def render(url):    
     out_dir = urllib.parse.quote_plus(url)
@@ -53,7 +56,7 @@ def render(url):
 
     return t.render(slides=slides, url=url, errors=errors, out_dir=out_dir, title=metadata["fulltitle"], creator=metadata["uploader"], duration=datetime.timedelta(seconds=metadata["duration"]), description=metadata["description"])
  
-def convert_url(request):
+def convert_url_old(request):
     """Responds to any HTTP request.
     Args:
         request (flask.Request): HTTP request object.
@@ -85,3 +88,25 @@ def convert_url_sub(event, context):
         return converter.main(data_dict.get("url"), data_dict.get("out_dir"))
     else:
         return "nothing3"
+
+def convert_url(request):
+    url = str(request.args.get('url'))
+    url_short = re.sub('^https?://', '', url)
+
+    out_dir = urllib.parse.quote_plus(url_short)
+    out_dir = out_dir.replace("%", "-")
+
+    publisher = pubsub_v1.PublisherClient()
+    topic_path = publisher.topic_path("decisive-plasma-299605", "convert_url")
+
+    data = {
+        "url": url,
+        "out_dir": out_dir
+    }
+    data_json = json.dumps(data)
+
+    publisher.publish(topic_path, data_json.encode("utf-8"))
+
+    print(f"Published message to {topic_path}.")
+
+    return flask.redirect('/view.html?out_dir=' + out_dir)
