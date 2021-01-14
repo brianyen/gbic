@@ -56,10 +56,10 @@ fetch("/v/" + id + "/vid.info.json")
 
 function processClip(i) {
 	var clip = ('0000'+i).slice(-3);
-	console.log(clip)
     fetch("/v/" + id + "/clip-" + clip + "/slides.json")
 	.then(response => response.json())
 	.then(function(data) {
+		console.log(404 == data)
         for (let slide of data) {
             var el = document.createElement("div")
             el.className = "group"
@@ -80,7 +80,7 @@ function processClip(i) {
         processClip(i+1)
 	})
 	.catch((error) => {
-		
+		console.log("we got an error:" + error)
 	})
 }
 processClip(0);
