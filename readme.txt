@@ -37,3 +37,7 @@ SETTING UP LOCAL HOST:
 	NOTE:
 	^index.html in localhost:8000
 	^main.py in localhost:8080
+
+CORS
+	gsutil cors set CORS.json gs://www.tubeslides.net
+	gsutil cors get gs://www.tubeslides.net
