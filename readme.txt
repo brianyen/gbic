@@ -13,7 +13,7 @@ personal NOTE: cd .. => go up by a directory
 
 PUSHING FUNCTIONS TO GOOGLE CLOUD FUNCTIONS:
 	(in google cloud shell)
-	gcloud functions deploy convert_url --runtime python38 --trigger-http --allow-unauthenticated
+	gcloud functions deploy convert_url --runtime python38 --trigger-http --memory 2048MB --allow-unauthenticated
 
 personal NOTE:
 	py -m venv env
