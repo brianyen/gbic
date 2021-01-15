@@ -7,12 +7,13 @@ PUSHING FILES TO GOOGLE CLOUD STORAGE:
 	gsutil cp [location] gs://[bucket name]/
 	ex:
 		gsutil cp index.html gs://www.tubeslides.net/
+		gsutil cp view.html gs://www.tubeslides.net/
 
 personal NOTE: cd .. => go up by a directory
 
 PUSHING FUNCTIONS TO GOOGLE CLOUD FUNCTIONS:
 	(in google cloud shell)
-	gcloud functions deploy convert_url --runtime python38 --trigger-http --allow-unauthenticated
+	gcloud functions deploy convert_url --runtime python38 --trigger-http --memory 2048MB --allow-unauthenticated
 
 personal NOTE:
 	py -m venv env
@@ -36,3 +37,7 @@ SETTING UP LOCAL HOST:
 	NOTE:
 	^index.html in localhost:8000
 	^main.py in localhost:8080
+
+CORS
+	gsutil cors set CORS.json gs://www.tubeslides.net
+	gsutil cors get gs://www.tubeslides.net
