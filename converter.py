@@ -49,6 +49,7 @@ def main(url, out):
     #out_dir = temp_dir.name
     print(temp_dir.name)
     out_dir = out
+    out_dir = "test2"
     print('getting vid info')
     get_video_info(url, temp_dir, out_dir)
     print('vid info get')
@@ -123,18 +124,20 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
 
     #finds the length of the clip current instance is on
     total_instances = math.floor(duration / clip_length) + 1
-    if instance < total_instances:
+    if instance < total_instances - 1:
         vid_length = clip_length
     else:
-        vid_length = duration - (clip_length * (total_instances - 1))
+        vid_length = duration % clip_length
+    print(vid_length)
 
     #downloads a png every second in the clip
     second = 0
     while second < vid_length:
         hms_ts = convert_s_to_hms(start_time + second)
-        stream = os.popen('ffmpeg -ss ' + str(second) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
+        stream = os.popen('ffmpeg -loglevel quiet -ss ' + str(second) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
         output = stream.read()
-        second = second + 1
+        second = second + 10
+        print(second)
 
     #uploads and gathers info for first frame
     frame_name = '/slide-' + convert_s_to_hms(start_time) + '.png'
@@ -145,7 +148,7 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
     #finds i-frames by comparing all the images and reporting differences
     previous_iframe = 0
     original = cv2.imread(path + frame_name)
-    curr_frame = 1
+    curr_frame = 10
 
     while curr_frame < vid_length:
         frame_name = '/slide-' + convert_s_to_hms(start_time + curr_frame) + '.png'
@@ -158,7 +161,7 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
                 upload('clip-' + str(instance).zfill(3) + frame_name, temp_dir, out_dir)
                 timestamps.append(start_time + curr_frame)
                 frames.append('clip-' + str(instance).zfill(3) + frame_name)
-        curr_frame = curr_frame + 1
+        curr_frame = curr_frame + 10
 
     print(timestamps)
     print(frames)
