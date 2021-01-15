@@ -7,6 +7,8 @@ import math
 import datetime
 import sys
 from google.cloud import storage
+import numpy as np
+import cv2
 
 clip_length = 300.0
 max_vid_length = 7200
@@ -74,7 +76,7 @@ def main(url, out):
         path = os.path.join(temp_dir.name, directory)
         os.makedirs(path, exist_ok=True)
         convert_range_to_mp4(url, i, temp_dir)
-        frames, fixed_timestamps = get_iframes(i, path, temp_dir, out_dir)
+        frames, fixed_timestamps = get_iframes(i, duration, path, temp_dir, out_dir)
         slides_json = construct_json_file(i, fixed_timestamps, frames, subtitles)
 
         file = open(path + '/slides.json', 'w')
@@ -113,43 +115,54 @@ def convert_range_to_mp4(url, instance, temp_dir):
     print("finished downloading vid")
     return output
 
-def get_iframes(instance, path, temp_dir, out_dir):
-    #change min_frame_diff based on video runtime
-    print('getting timestamps')
-    timestamps = get_iframes_ts(instance, temp_dir)
-    print(timestamps)
-
+def get_iframes(instance, duration, path, temp_dir, out_dir):
     min_frame_diff = 5
-    last_ts = -math.inf
     frames = []
-    fixed_timestamps = []
-    for ts in timestamps:
-        if ts - last_ts < min_frame_diff:
-            continue
-        hms_ts = convert_s_to_hms(round(ts))
-        #make ffmpeg output "output.png" and rename it afterwards
-        stream = os.popen('ffmpeg -ss ' + str(ts - (instance * clip_length)) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
-        while stream.read() != '':
-            pass
-        upload('clip-' + str(instance).zfill(3) + '/slide-' + hms_ts + '.png', temp_dir, out_dir)
-
-        frames.append('clip-' + str(instance).zfill(3) + '/slide-' + hms_ts + '.png')
-        fixed_timestamps.append(ts)
-        last_ts = ts
-    return frames, fixed_timestamps
-
-def get_iframes_ts(instance, temp_dir):
-    stream = os.popen('ffprobe -show_frames -of json -f lavfi "movie=' + temp_dir.name + '/vid' + str(instance) + '.mp4,select=gt(scene\\,0.1)"')
-    output = stream.read()
-    metadata = output[output.index("{"):]
-    metadata_dict = json.loads(metadata)
     timestamps = []
     start_time = instance * clip_length
-    timestamps.append(start_time)
 
-    for frame in metadata_dict['frames']:
-        timestamps.append(start_time + float(frame.get('best_effort_timestamp_time')))
-    return timestamps
+    #finds the length of the clip current instance is on
+    total_instances = math.floor(duration / clip_length) + 1
+    if instance < total_instances:
+        vid_length = clip_length
+    else:
+        vid_length = duration - (clip_length * (total_instances - 1))
+
+    #downloads a png every second in the clip
+    second = 0
+    while second < vid_length:
+        hms_ts = convert_s_to_hms(start_time + second)
+        stream = os.popen('ffmpeg -ss ' + str(second) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
+        output = stream.read()
+        second = second + 1
+
+    #uploads and gathers info for first frame
+    frame_name = '/slide-' + convert_s_to_hms(start_time) + '.png'
+    frames.append('clip-' + str(instance).zfill(3) + frame_name)
+    timestamps.append(start_time)
+    upload('clip-' + str(instance).zfill(3) + frame_name, temp_dir, out_dir)
+
+    #finds i-frames by comparing all the images and reporting differences
+    previous_iframe = 0
+    original = cv2.imread(path + frame_name)
+    curr_frame = 1
+
+    while curr_frame < vid_length:
+        frame_name = '/slide-' + convert_s_to_hms(start_time + curr_frame) + '.png'
+        contrast = cv2.imread(path + frame_name)
+        if curr_frame - previous_iframe >= min_frame_diff:
+            diff = mse(original, contrast)
+            if diff > 1000.0:
+                original = contrast
+                previous_iframe = curr_frame
+                upload('clip-' + str(instance).zfill(3) + frame_name, temp_dir, out_dir)
+                timestamps.append(start_time + curr_frame)
+                frames.append('clip-' + str(instance).zfill(3) + frame_name)
+        curr_frame = curr_frame + 1
+
+    print(timestamps)
+    print(frames)
+    return frames, timestamps
 
 def get_subtitles_with_ts(temp_dir):
     with open(temp_dir.name + '/subs.en.json3', 'r') as f:
@@ -227,6 +240,12 @@ def get_sec(time_str):
         h, m, s = time_str.split(':')
         return int(h) * 3600 + int(m) * 60 + int(s)
 
+def mse(imageA, imageB):
+    err = np.sum((imageA.astype("float") - imageB.astype("float")) ** 2)
+    err /= float(imageA.shape[0] * imageA.shape[1])
+
+    return err
+
 ##############################################################
 
 def convert_subtitles_to_transcript(subtitles):
@@ -260,25 +279,6 @@ def upload(file, temp_dir, out_dir):
     """
     # The public URL can be used to directly access the uploaded file via HTTP.
     return blob.public_url
-
-def upload_to_bucket(blob_name, path_to_file, bucket_name):
-    """ Upload data to a bucket"""
-
-    # Explicitly use service account credentials by specifying the private key
-    # file.
-    storage_client = storage.Client.from_service_account_json(
-        'creds.json')
-
-    #print(buckets = list(storage_client.list_buckets())
-
-    bucket = storage_client.get_bucket(bucket_name)
-    blob = bucket.blob(blob_name)
-    blob.upload_from_filename(path_to_file)
-
-    #returns a public url
-    return blob.public_url
-
-
 
 ##############################################################
 

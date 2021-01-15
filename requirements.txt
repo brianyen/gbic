@@ -4,3 +4,6 @@ google.cloud
 google-cloud-storage
 google-cloud-pubsub==2.2.0
 Flask==1.1.2
+scikit-image
+opencv-python
+numpy
