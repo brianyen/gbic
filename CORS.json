@@ -1,0 +1,8 @@
+[
+    {
+      "origin": ["www.tubeslides.net"],
+      "method": ["GET"],
+      "responseHeader": ["Content-Type"],
+      "maxAgeSeconds": 60
+    }
+]

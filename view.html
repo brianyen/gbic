@@ -30,21 +30,28 @@
 <script>
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get('out_dir');
+var urlFull
 
 outputEl = document.getElementById("output")
 
 fetch("/v/" + id + "/vid.info.json")
-.then(response => response.json().then(function(data) {
+.then(function(response) {
+	console.log(response);
+	return response.json()
+})
+.then(function(data) {
+	console.log(data)
     var url = document.getElementById("m-url")
     var title = document.getElementById("m-title")
     var creator = document.getElementById("m-creator")
     var length = document.getElementById("m-length")
-    var description = document.getElementById("description")
+	var description = document.getElementById("description")
+	
+	urlFull = data.webpage_url
     
     var date = new Date(0);
     date.setSeconds(data.duration);
     var timeString = date.toISOString().substr(11, 8);
-
 
     url.innerHTML = '<b>Video URL: </b> <a href="' + data.webpage_url + '">' + data.webpage_url + '</a>'
     title.innerHTML = '<b>Title: </b>' + data.fulltitle
@@ -52,21 +59,29 @@ fetch("/v/" + id + "/vid.info.json")
     length.innerHTML = '<b>Video Length: </b>' + timeString
     description.innerHTML = "<b>Description</b>: " + data.description
     
-}))
+})
+.catch((error) => {
+		console.log("we got an error:" + error)
+	})
 
 function processClip(i) {
 	var clip = ('0000'+i).slice(-3);
+	console.log("processClip", clip );
     fetch("/v/" + id + "/clip-" + clip + "/slides.json")
 	.then(response => response.json())
 	.then(function(data) {
-		console.log(404 == data)
+		console.log(data)
+		console.log(data.length + " length of data")
         for (let slide of data) {
             var el = document.createElement("div")
             el.className = "group"
             var s = '<img class="slide" src="/v/' +  id + '/' + slide.png + '">'
-            s = s + '<div class="column">'
+			s = s + '<div class="column">'
+
             for (let x of slide.text) {
-                s = s + '<p class="paragraph"> <span class="timestamp">' + x.ts + ':</span> ' + x.text + '</p>'
+				var time1 = x.ts.split('-');
+				var secs = (+time1[0]) * 60 * 60 + (+time1[1]) * 60 + (+time1[2]); 
+                s = s + '<a class="paragraph" href="' + urlFull + '&t=' + secs + '"> <span class="timestamp">' + x.ts + ':</span> ' + x.text + '</a>'
             }
             s = s + "</div>"
             el.innerHTML = s
@@ -149,6 +164,11 @@ processClip(0);
 	font-size: 125%;
 	margin-bottom: 0px;
 	margin-top: 1%;
+	display: block;
+}
+.column a {
+  color: black;
+  text-decoration: none;
 }
 .timestamp {
 	font-size: 75%;
@@ -160,8 +180,8 @@ processClip(0);
 	color: rgb(225, 40, 40);
 }
 .loader {
-  border: 16px solid #e0d9d9; /* Light grey */
-  border-top: 16px solid #434647; /* Blue */
+  border: 16px solid #e0d9d9; 
+  border-top: 16px solid #434647;
   border-radius: 50%;
   width: 120px;
   height: 120px;
