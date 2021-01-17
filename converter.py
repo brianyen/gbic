@@ -49,7 +49,6 @@ def main(url, out):
     #out_dir = temp_dir.name
     print(temp_dir.name)
     out_dir = out
-    out_dir = "test2"
     print('getting vid info')
     get_video_info(url, temp_dir, out_dir)
     print('vid info get')
@@ -98,20 +97,20 @@ def get_video_duration(url, temp_dir):
     return int(duration)
 
 def get_video_info(url, temp_dir, out_dir):
-    stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir.name + '/vid" --write-info-json --skip-download ' + url)
+    stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir.name + '/vid" --write-info-json --force-ipv4 --skip-download ' + url)
     output = stream.read()
     upload('vid.info.json', temp_dir, out_dir)
     return output
 
 def get_subtitles(url, temp_dir):
-	stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir.name + '/subs" --write-auto-sub --sub-format json3 --skip-download ' + url)
+	stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir.name + '/subs" --write-auto-sub --write-sub --sub-format json3 --force-ipv4 --skip-download ' + url)
 	output = stream.read()
 	return output
 
 def convert_range_to_mp4(url, instance, temp_dir):
     print("start downloading vid " + str(instance))
     start_time = clip_length * instance
-    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 22 -g ' + url + ') -acodec copy -vcodec copy -t ' + str(clip_length) + ' ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
+    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 22 -g --force-ipv4 ' + url + ') -acodec copy -vcodec copy -t ' + str(clip_length) + ' ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
     output = stream.read()
     print("finished downloading vid")
     return output
@@ -136,7 +135,7 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
         hms_ts = convert_s_to_hms(start_time + second)
         stream = os.popen('ffmpeg -loglevel quiet -ss ' + str(second) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
         output = stream.read()
-        second = second + 10
+        second = second + 5
         print(second)
 
     #uploads and gathers info for first frame
@@ -148,7 +147,7 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
     #finds i-frames by comparing all the images and reporting differences
     previous_iframe = 0
     original = cv2.imread(path + frame_name)
-    curr_frame = 10
+    curr_frame = 5
 
     while curr_frame < vid_length:
         frame_name = '/slide-' + convert_s_to_hms(start_time + curr_frame) + '.png'
@@ -161,7 +160,7 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
                 upload('clip-' + str(instance).zfill(3) + frame_name, temp_dir, out_dir)
                 timestamps.append(start_time + curr_frame)
                 frames.append('clip-' + str(instance).zfill(3) + frame_name)
-        curr_frame = curr_frame + 10
+        curr_frame = curr_frame + 5
 
     print(timestamps)
     print(frames)
