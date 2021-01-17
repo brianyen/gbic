@@ -34,7 +34,7 @@ var urlFull
 
 outputEl = document.getElementById("output")
 
-fetch("/v/" + id + "/vid.info.json")
+fetch("https://storage.googleapis.com/www.tubeslides.net/v/" + id + "/vid.info.json")
 .then(function(response) {
 	console.log(response);
 	return response.json()
@@ -67,7 +67,7 @@ fetch("/v/" + id + "/vid.info.json")
 function processClip(i) {
 	var clip = ('0000'+i).slice(-3);
 	console.log("processClip", clip );
-    fetch("/v/" + id + "/clip-" + clip + "/slides.json")
+    fetch("https://storage.googleapis.com/www.tubeslides.net/v/" + id + "/clip-" + clip + "/slides.json")
 	.then(response => response.json())
 	.then(function(data) {
 		console.log(data)

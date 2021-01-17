@@ -2,7 +2,6 @@
     {
       "origin": ["https://www.tubeslides.net"],
       "method": ["GET"],
-      "responseHeader": [],
       "maxAgeSeconds": 60
     }
 ]
