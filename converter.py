@@ -10,8 +10,8 @@ from google.cloud import storage
 import numpy as np
 import cv2
 
-clip_length = 300.0
-max_vid_length = 7200
+clip_length = 300.0 #5 minutes
+max_vid_length = 7200 #2 hours
 
 #download_url = sys.argv[1]
 out_dir = "test1"#sys.argv[2]
@@ -44,11 +44,13 @@ def raiseError(message, temp_dir, out_dir):
     upload('error.txt', temp_dir, out_dir)
     sys.exit()
 
-def main(url, out):
+def main(url, out_dir):
+    print('version 50')
     temp_dir = tempfile.TemporaryDirectory()
     #out_dir = temp_dir.name
     print(temp_dir.name)
-    out_dir = out
+    get_cookies(temp_dir)
+
     print('getting vid info')
     get_video_info(url, temp_dir, out_dir)
     print('vid info get')
@@ -86,6 +88,7 @@ def main(url, out):
     #Change temp_dir.name to output directory (video ID)
     file = open(temp_dir.name + '/done.txt', "x")
     file.close()
+    upload_cookies(temp_dir)
     upload('done.txt', temp_dir, out_dir)
     #convert_subtitles_to_transcript(subtitles)"""
 
@@ -97,21 +100,27 @@ def get_video_duration(url, temp_dir):
     return int(duration)
 
 def get_video_info(url, temp_dir, out_dir):
-    stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir.name + '/vid" --write-info-json --force-ipv4 --skip-download ' + url)
+    stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir.name + '/vid" --write-info-json --cookies ' + temp_dir.name + '/cookies.txt --force-ipv4 --skip-download ' + url)
     output = stream.read()
+    if output == '':
+        raiseError("Error getting video information.", temp_dir, out_dir)
     upload('vid.info.json', temp_dir, out_dir)
     return output
 
 def get_subtitles(url, temp_dir):
-	stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir.name + '/subs" --write-auto-sub --write-sub --sub-format json3 --force-ipv4 --skip-download ' + url)
-	output = stream.read()
-	return output
+    stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir.name + '/subs" --write-auto-sub --write-sub --sub-format json3 --cookies ' + temp_dir.name + '/cookies.txt --force-ipv4 --skip-download ' + url)
+    output = stream.read()
+    if output == '':
+        raiseError("Error getting video subtitles. Video may have no subtitles available.", temp_dir, out_dir)
+    return output
 
 def convert_range_to_mp4(url, instance, temp_dir):
     print("start downloading vid " + str(instance))
     start_time = clip_length * instance
-    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 22 -g --force-ipv4 ' + url + ') -acodec copy -vcodec copy -t ' + str(clip_length) + ' ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
+    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 135 -g --cookies ' + temp_dir.name + '/cookies.txt --force-ipv4 ' + url + ') -acodec copy -vcodec copy -t ' + str(clip_length) + ' ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
     output = stream.read()
+    if output == '':
+        raiseError("Error while processing video.", temp_dir, out_dir)
     print("finished downloading vid")
     return output
 
@@ -135,6 +144,8 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
         hms_ts = convert_s_to_hms(start_time + second)
         stream = os.popen('ffmpeg -loglevel quiet -ss ' + str(second) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
         output = stream.read()
+        if output == '':
+            raiseError("Error in finding key frames.", temp_dir, out_dir)
         second = second + 5
         print(second)
 
@@ -273,14 +284,20 @@ def upload(file, temp_dir, out_dir):
     blob.upload_from_filename(temp_dir.name + '/' + file)
     print('success! uploaded ' + temp_dir.name + '/' + file)
 
-    """
-    blob.upload_from_string(
-        uploaded_file.read(),
-        content_type=uploaded_file.content_type
-    )
-    """
     # The public URL can be used to directly access the uploaded file via HTTP.
     return blob.public_url
+
+def get_cookies(temp_dir):
+    print('getting cookies')
+    blob = bucket.blob('v/cookies.txt')
+    blob.download_to_filename(temp_dir.name + '/cookies.txt')
+    print('success')
+    return True
+
+def upload_cookies(temp_dir):
+    blob = bucket.blob('v/cookies.txt')
+    blob.upload_from_filename(temp_dir.name + '/cookies.txt')
+    print('uploaded cookies.txt')
 
 ##############################################################
 
