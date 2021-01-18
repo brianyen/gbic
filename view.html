@@ -22,53 +22,97 @@
 
 <div class="bar" style="margin-top: 0px"></div>
 
+<div id="error"></div>
+
 <div id="output"></div> 
 
-<div class="loader"></div>
+<div id="loader"></div>
 
 </body>
 <script>
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get('out_dir');
 var urlFull
+var keepTrying = true
+var loaderEl = document.getElementById("loader")
+var n = 0
+var errorEl = document.getElementById("error")
 
 outputEl = document.getElementById("output")
 
-fetch("https://storage.googleapis.com/www.tubeslides.net/v/" + id + "/vid.info.json")
-.then(function(response) {
-	console.log(response);
-	return response.json()
-})
-.then(function(data) {
-	console.log(data)
-    var url = document.getElementById("m-url")
-    var title = document.getElementById("m-title")
-    var creator = document.getElementById("m-creator")
-    var length = document.getElementById("m-length")
-	var description = document.getElementById("description")
-	
-	urlFull = data.webpage_url
-    
-    var date = new Date(0);
-    date.setSeconds(data.duration);
-    var timeString = date.toISOString().substr(11, 8);
 
-    url.innerHTML = '<b>Video URL: </b> <a href="' + data.webpage_url + '">' + data.webpage_url + '</a>'
-    title.innerHTML = '<b>Title: </b>' + data.fulltitle
-    creator.innerHTML = '<b>Creator: </b>' + data.uploader
-    length.innerHTML = '<b>Video Length: </b>' + timeString
-    description.innerHTML = "<b>Description</b>: " + data.description
-    
-})
-.catch((error) => {
-		console.log("we got an error:" + error)
+function processError(callback) {
+	fetch("https://storage.googleapis.com/www.tubeslides.net/v/" + id + "/errors.txt")
+	.then(function(response) {
+		if (response.ok == true) {
+			loaderEl.style.display = "none";
+			return response.json()
+		} else {
+			fetch("https://storage.googleapis.com/www.tubeslides.net/v/" + id + "/done.txt")
+			.then(function(response) {
+				if (response.ok == true) {
+					loaderEl.style.display = "none";
+					return
+				} else {
+					setTimeout(function() {console.log("aaaaaaaaaaaaaaa"); callback(n)}, 10000);
+				}
+			})
+		}
 	})
+	.then(function(errors) {
+		/*if (errors != undefined) { 
+			console.log(errors)
+			errorEl.innerHTML = errors
+		}*/
+	})
+
+}
+function processVidInfo() {
+	fetch("https://storage.googleapis.com/www.tubeslides.net/v/" + id + "/vid.info.json")
+	.then(function(response) {
+		console.log(response);
+		if (response.ok != true) {
+			processError(processVidInfo)
+		}
+		return response.json()
+	})
+	.then(function(data) {
+		console.log(data)
+		var url = document.getElementById("m-url")
+		var title = document.getElementById("m-title")
+		var creator = document.getElementById("m-creator")
+		var length = document.getElementById("m-length")
+		var description = document.getElementById("description")
+		
+		urlFull = data.webpage_url
+		
+		var date = new Date(0);
+		date.setSeconds(data.duration);
+		var timeString = date.toISOString().substr(11, 8);
+
+		url.innerHTML = '<b>Video URL: </b> <a href="' + data.webpage_url + '">' + data.webpage_url + '</a>'
+		title.innerHTML = '<b>Title: </b>' + data.fulltitle
+		creator.innerHTML = '<b>Creator: </b>' + data.uploader
+		length.innerHTML = '<b>Video Length: </b>' + timeString
+		description.innerHTML = "<b>Description</b>: " + data.description
+		
+	})
+	.catch((error) => {
+			console.log("we got an error:" + error)
+	})
+}
+processVidInfo()
 
 function processClip(i) {
 	var clip = ('0000'+i).slice(-3);
 	console.log("processClip", clip );
     fetch("https://storage.googleapis.com/www.tubeslides.net/v/" + id + "/clip-" + clip + "/slides.json")
-	.then(response => response.json())
+	.then(function(response) {
+		if (response.ok != true) {
+			processError(processClip)
+		}
+		return response.json()
+	})
 	.then(function(data) {
 		console.log(data)
 		console.log(data.length + " length of data")
@@ -92,13 +136,14 @@ function processClip(i) {
             outputEl.appendChild(el)
 			outputEl.appendChild(bar)
 		}
-        processClip(i+1)
+		n++;
+        processClip(n)
 	})
 	.catch((error) => {
 		console.log("we got an error:" + error)
 	})
 }
-processClip(0);
+processClip(n);
 
 </script>
 <style>
@@ -123,7 +168,7 @@ processClip(0);
 #input {
 	width: 80%;
 }
-#metadata {
+#metadata, #error {
 	padding: 0.5%;
 	margin-left: 5%;
 	font-size: 150%;
@@ -179,7 +224,7 @@ processClip(0);
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 	color: rgb(225, 40, 40);
 }
-.loader {
+#loader {
   border: 16px solid #e0d9d9; 
   border-top: 16px solid #434647;
   border-radius: 50%;
