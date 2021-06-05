@@ -46,5 +46,4 @@ CORS
 	gsutil cors get gs://www.tubeslides.net
 	
 RUNNING converter_local.py
-
-python3 converter_local.py <Youtube URL> <OUTPUT DIRECTORY> <PREFIX TO ACCESS YOUTUBE-DL>
+	python3 converter_local.py <Youtube URL> <OUTPUT DIRECTORY> <PREFIX TO ACCESS YOUTUBE-DL>
