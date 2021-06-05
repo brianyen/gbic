@@ -25,6 +25,9 @@ SETTING UP LOCAL HOST:
 
 	1.
 	.\env\Scripts\activate ((in both shells))
+	
+	pip3 install jinja2
+	pip3 install -r requirements.txt
 
 	2.
 	functions-framework --target convert_url --debug
@@ -41,3 +44,7 @@ SETTING UP LOCAL HOST:
 CORS
 	gsutil cors set CORS.json gs://www.tubeslides.net
 	gsutil cors get gs://www.tubeslides.net
+	
+RUNNING converter_local.py
+
+python3 converter_local.py <Youtube URL> <OUTPUT DIRECTORY> <PREFIX TO ACCESS YOUTUBE-DL>
