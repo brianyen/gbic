@@ -51,19 +51,25 @@ function processError(callback) {
 			fetch("https://storage.googleapis.com/www.tubeslides.net/v/" + id + "/done.txt")
 			.then(function(response) {
 				if (response.ok == true) {
+					errorsEl.innerHTML = ""
 					loaderEl.style.display = "none";
+					var finishEl = document.createElement("div")
+					finishEl.id = "finish"
+					finishEl.innerHTML = "<h1>Fin.</h1>"
+					outputEl.appendChild(finishEl)
+					console.log("finished")
 					return
 				} else {
+					errorEl.innerHTML = "We are working on converting your video right now. Please hold on!"
 					setTimeout(function() {console.log("aaaaaaaaaaaaaaa"); callback(n)}, 10000);
 				}
 			})
 		}
 	})
 	.then(function(errors) {
-		/*if (errors != undefined) { 
+		if (errors != undefined) { 
 			console.log(errors)
-			errorEl.innerHTML = errors
-		}*/
+		}
 	})
 
 }
@@ -118,8 +124,12 @@ function processClip(i) {
 		console.log(data.length + " length of data")
         for (let slide of data) {
             var el = document.createElement("div")
-            el.className = "group"
-            var s = '<img class="slide" src="/v/' +  id + '/' + slide.png + '">'
+			el.className = "group"
+
+			var time01 = slide.ts.split('-');
+			var imgSecs = (+time01[0]) * 60 * 60 + (+time01[1]) * 60 + (+time01[2]); 
+
+            var s = '<a href="' + urlFull + '&t=' + imgSecs + '"><img class="slide" src="/v/' +  id + '/' + slide.png + '"></a>'
 			s = s + '<div class="column">'
 
             for (let x of slide.text) {
@@ -154,7 +164,7 @@ processClip(n);
 #body {
 	margin: 0px;
 }
-#title {
+#title, #finish {
 	text-align: center;
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 	padding: 1px;
@@ -210,6 +220,9 @@ processClip(n);
 	margin-bottom: 0px;
 	margin-top: 1%;
 	display: block;
+}
+.paragraph:hover {
+	background-color: #CCCCCC;
 }
 .column a {
   color: black;
