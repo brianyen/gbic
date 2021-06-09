@@ -1,4 +1,5 @@
 import os
+import os.path
 import tempfile
 import time
 import shutil
@@ -14,8 +15,11 @@ clip_length = 300.0 #5 minutes
 max_vid_length = 7200 #2 hours
 
 #download_url = sys.argv[1]
-out_dir = "test1"#sys.argv[2]
+#out_dir = "test1"#sys.argv[2]
 ytdl_prefix = ""#sys.argv[3
+local = False
+
+print('version 54')
 
 print('storage client')
 gcs = storage.Client()
@@ -42,10 +46,10 @@ def raiseError(message, temp_dir, out_dir):
     file.write(message)
     file.close()
     upload('error.txt', temp_dir, out_dir)
-    sys.exit()
+    #sys.exit()
 
-def main(url, out_dir):
-    print('version 50')
+def main(url, out):
+    out_dir = out
     temp_dir = tempfile.TemporaryDirectory()
     #out_dir = temp_dir.name
     print(temp_dir.name)
@@ -62,7 +66,7 @@ def main(url, out_dir):
 
     print('getting subtitles')
     instances = math.floor(duration / clip_length) + 1
-    get_subtitles(url, temp_dir)
+    get_subtitles(url, temp_dir, out_dir)
     subtitles = get_subtitles_with_ts(temp_dir)
     print('subtitles get')
 
@@ -77,7 +81,7 @@ def main(url, out_dir):
         #Change temp_dir.name to output directory (video ID)
         path = os.path.join(temp_dir.name, directory)
         os.makedirs(path, exist_ok=True)
-        convert_range_to_mp4(url, i, temp_dir)
+        convert_range_to_mp4(url, i, temp_dir, out_dir)
         frames, fixed_timestamps = get_iframes(i, duration, path, temp_dir, out_dir)
         slides_json = construct_json_file(i, fixed_timestamps, frames, subtitles)
 
@@ -88,7 +92,6 @@ def main(url, out_dir):
     #Change temp_dir.name to output directory (video ID)
     file = open(temp_dir.name + '/done.txt', "x")
     file.close()
-    upload_cookies(temp_dir)
     upload('done.txt', temp_dir, out_dir)
     #convert_subtitles_to_transcript(subtitles)"""
 
@@ -107,17 +110,17 @@ def get_video_info(url, temp_dir, out_dir):
     upload('vid.info.json', temp_dir, out_dir)
     return output
 
-def get_subtitles(url, temp_dir):
+def get_subtitles(url, temp_dir, out_dir):
     stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir.name + '/subs" --write-auto-sub --write-sub --sub-format json3 --cookies ' + temp_dir.name + '/cookies.txt --force-ipv4 --skip-download ' + url)
     output = stream.read()
     if output == '':
         raiseError("Error getting video subtitles. Video may have no subtitles available.", temp_dir, out_dir)
     return output
 
-def convert_range_to_mp4(url, instance, temp_dir):
+def convert_range_to_mp4(url, instance, temp_dir, out_dir):
     print("start downloading vid " + str(instance))
     start_time = clip_length * instance
-    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 135 -g --cookies ' + temp_dir.name + '/cookies.txt --force-ipv4 ' + url + ') -acodec copy -vcodec copy -t ' + str(clip_length) + ' ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
+    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 22 -g --cookies ' + temp_dir.name + '/cookies.txt --force-ipv4 ' + url + ') -acodec copy -vcodec copy -t ' + str(clip_length) + ' ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
     output = stream.read()
     if output == '':
         raiseError("Error while processing video.", temp_dir, out_dir)
@@ -142,11 +145,11 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
     second = 0
     while second < vid_length:
         hms_ts = convert_s_to_hms(start_time + second)
-        stream = os.popen('ffmpeg -loglevel quiet -ss ' + str(second) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
+        stream = os.popen('ffmpeg -loglevel quiet -ss ' + str(second) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -s 720x480 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
         output = stream.read()
         if output == '':
             raiseError("Error in finding key frames.", temp_dir, out_dir)
-        second = second + 5
+        second = second + 10
         print(second)
 
     #uploads and gathers info for first frame
@@ -158,7 +161,7 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
     #finds i-frames by comparing all the images and reporting differences
     previous_iframe = 0
     original = cv2.imread(path + frame_name)
-    curr_frame = 5
+    curr_frame = 10
 
     while curr_frame < vid_length:
         frame_name = '/slide-' + convert_s_to_hms(start_time + curr_frame) + '.png'
@@ -171,7 +174,7 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
                 upload('clip-' + str(instance).zfill(3) + frame_name, temp_dir, out_dir)
                 timestamps.append(start_time + curr_frame)
                 frames.append('clip-' + str(instance).zfill(3) + frame_name)
-        curr_frame = curr_frame + 5
+        curr_frame = curr_frame + 10
 
     print(timestamps)
     print(frames)
@@ -277,6 +280,8 @@ def add_punctuation(transcript):
 ##############################################################
 
 def upload(file, temp_dir, out_dir):
+    if local:
+        return
     # Create a new blob and upload the file's content.
     blob = bucket.blob('v/' + out_dir + '/' + file)
 
@@ -289,15 +294,10 @@ def upload(file, temp_dir, out_dir):
 
 def get_cookies(temp_dir):
     print('getting cookies')
-    blob = bucket.blob('v/cookies.txt')
+    blob = bucket.blob('cookies.txt')
     blob.download_to_filename(temp_dir.name + '/cookies.txt')
     print('success')
     return True
-
-def upload_cookies(temp_dir):
-    blob = bucket.blob('v/cookies.txt')
-    blob.upload_from_filename(temp_dir.name + '/cookies.txt')
-    print('uploaded cookies.txt')
 
 ##############################################################
 
