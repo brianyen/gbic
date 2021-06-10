@@ -17,14 +17,16 @@ max_vid_length = 7200 #2 hours
 #download_url = sys.argv[1]
 #out_dir = "test1"#sys.argv[2]
 ytdl_prefix = ""#sys.argv[3
-local = False
+host = 0
+#host = 0: local
+#host = 1: google cloud
 
-print('version 54')
-
-print('storage client')
-gcs = storage.Client()
-bucket = gcs.get_bucket('www.tubeslides.net')
-print('storage client done')
+if host == 1
+    print('version 54')
+    print('storage client')
+    gcs = storage.Client()
+    bucket = gcs.get_bucket('www.tubeslides.net')
+    print('storage client done')
 
 #long video
 #download_url = "https://www.youtube.com/watch?v=R44tKAPpKOM"
@@ -243,7 +245,7 @@ def convert_s_to_hms(x):
 
 def get_sec(time_str):
     """Get Seconds from time."""
-    count = 0;
+    count = 0
     for i in time_str:
         if i == ':':
             count += 1
@@ -280,24 +282,40 @@ def add_punctuation(transcript):
 ##############################################################
 
 def upload(file, temp_dir, out_dir):
-    if local:
+    if host == 0:
         return
-    # Create a new blob and upload the file's content.
-    blob = bucket.blob('v/' + out_dir + '/' + file)
 
-    print('uploading ' + temp_dir.name + '/' + file + ' to ' + out_dir)
-    blob.upload_from_filename(temp_dir.name + '/' + file)
-    print('success! uploaded ' + temp_dir.name + '/' + file)
+    input_file = os.path.join(temp_dir.name, file)
+    output_file = os.path.join('v', out_dir, file)
 
-    # The public URL can be used to directly access the uploaded file via HTTP.
-    return blob.public_url
+    elif host == 1:
+        # Create a new blob and upload the file's content.
+        blob = bucket.blob(output_file)
+        print('uploading ' + input_file + ' to ' + out_dir)
+        blob.upload_from_filename(input_file)
+        print('success! uploaded ' + input_file)
+
+        # The public URL can be used to directly access the uploaded file via HTTP.
+        return blob.public_url
+    else:
+        raiseError("Error: invalid host", temp_dir, out_dir)
+        return
 
 def get_cookies(temp_dir):
-    print('getting cookies')
-    blob = bucket.blob('cookies.txt')
-    blob.download_to_filename(temp_dir.name + '/cookies.txt')
-    print('success')
-    return True
+    if host == 0:
+        file = open(temp_dir.name + '/cookies.txt', "w")
+        file.write('')
+        file.close()
+        return True
+
+    elif host == 1:
+        print('getting cookies')
+        blob = bucket.blob('cookies.txt')
+        blob.download_to_filename(temp_dir.name + '/cookies.txt')
+
+        print('success')
+        return True
+    return
 
 ##############################################################
 
