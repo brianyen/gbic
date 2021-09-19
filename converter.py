@@ -21,7 +21,7 @@ host = 0
 #host = 0: local
 #host = 1: google cloud
 
-if host == 1
+if host == 1:
     print('version 54')
     print('storage client')
     gcs = storage.Client()
@@ -288,7 +288,7 @@ def upload(file, temp_dir, out_dir):
     input_file = os.path.join(temp_dir.name, file)
     output_file = os.path.join('v', out_dir, file)
 
-    elif host == 1:
+    if host == 1:
         # Create a new blob and upload the file's content.
         blob = bucket.blob(output_file)
         print('uploading ' + input_file + ' to ' + out_dir)
@@ -307,7 +307,6 @@ def get_cookies(temp_dir):
         file.write('')
         file.close()
         return True
-
     elif host == 1:
         print('getting cookies')
         blob = bucket.blob('cookies.txt')
