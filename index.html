@@ -3,10 +3,10 @@
 <div id="title">
 	<h1>tubeslides</h1>
 </div>
-	
+
 <div id="search">
-	<form id="form" action="/convert_url">
-		<input id="input" name="url"></input>
+	<form id="form" action="/go" method="post">
+		<input id="url" name="url"></input>
 		<input type="submit" value="Go">
 	</form>
 	<div id="bar"></div>
@@ -16,13 +16,6 @@
 	<p id="test"></p>
 	<img src="https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png" alt="placeholder image">
 </div>
-
-<script>
-if (window.location.hostname == "localhost") {
-	document.getElementById("form").action = "http://localhost:8080/";
-}
-
-</script>
 
 </body>
 <style>
@@ -36,7 +29,7 @@ if (window.location.hostname == "localhost") {
 	text-align: center;
 	margin-top: 100px;
 }
-#input {
+#url {
 	width: 250px;
 }
 #a {
