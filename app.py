@@ -26,7 +26,7 @@ class ServerHandler(http.server.SimpleHTTPRequestHandler):
 
         print(out_dir)
 
-        converter.foo()
+        converter.main(url, out_dir)
 
 
 Handler = ServerHandler

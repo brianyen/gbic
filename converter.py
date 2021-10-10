@@ -19,14 +19,14 @@ ytdl_prefix = ""#sys.argv[3
 host = 0
 #host = 0: local
 #host = 1: google cloud
-
+"""
 if host == 1:
     print('version 54')
     print('storage client')
     gcs = storage.Client()
     bucket = gcs.get_bucket('www.tubeslides.net')
     print('storage client done')
-
+"""
 #long video
 #download_url = "https://www.youtube.com/watch?v=R44tKAPpKOM"
 
