@@ -1,6 +1,7 @@
 import http.server
 import socketserver
 import urllib
+import re
 
 PORT = 7000
 
@@ -14,7 +15,13 @@ class ServerHandler(http.server.SimpleHTTPRequestHandler):
         self.args = dict(urllib.parse.parse_qsl(self.query_string))
         
         print(self.args)
+        url = str(self.args)
+        url_short = re.sub('^https?://', '', url)
 
+        out_dir = urllib.parse.quote_plus(url_short)
+        out_dir = out_dir.replace("%", "-")
+
+        print(out_dir)
 
 Handler = ServerHandler
 
