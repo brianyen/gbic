@@ -2,6 +2,9 @@ import http.server
 import socketserver
 import urllib
 import re
+import numpy as np
+
+import converter
 
 PORT = 7000
 
@@ -22,6 +25,9 @@ class ServerHandler(http.server.SimpleHTTPRequestHandler):
         out_dir = out_dir.replace("%", "-")
 
         print(out_dir)
+
+        converter.foo()
+
 
 Handler = ServerHandler
 
