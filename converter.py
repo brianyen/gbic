@@ -46,7 +46,7 @@ def foo():
     print("This is me!")
 
 def raiseError(message, temp_dir, out_dir):
-    file = open(temp_dir.name + '/error.txt', "w")
+    file = open(temp_dir + '/error.txt', "w")
     file.write(message)
     file.close()
     upload('error.txt', temp_dir, out_dir)
@@ -54,12 +54,13 @@ def raiseError(message, temp_dir, out_dir):
 
 def main(url, out):
     out_dir = out
-    temp_dir = tempfile.TemporaryDirectory()
-    #out_dir = temp_dir.name
-    print(temp_dir.name)
+#    temp_dir = tempfile.TemporaryDirectory().name
+    temp_dir = "./temp"
+    #out_dir = temp_dir
+    print(temp_dir)
     get_cookies(temp_dir)
 
-    print('getting vid info')
+    print('getting vid info', url, temp_dir, out_dir)
     get_video_info(url, temp_dir, out_dir)
     print('vid info get')
 
@@ -74,16 +75,16 @@ def main(url, out):
     subtitles = get_subtitles_with_ts(temp_dir)
     print('subtitles get')
 
-    #Change temp_dir.name to output directory (video ID)
-    file = open(temp_dir.name + '/subtitles.json', 'w')
+    #Change temp_dir to output directory (video ID)
+    file = open(temp_dir + '/subtitles.json', 'w')
     file.write(str(subtitles))
     file.close()
     upload('subtitles.json', temp_dir, out_dir)
 
     for i in range(instances):
         directory = 'clip-' + str(i).zfill(3)
-        #Change temp_dir.name to output directory (video ID)
-        path = os.path.join(temp_dir.name, directory)
+        #Change temp_dir to output directory (video ID)
+        path = os.path.join(temp_dir, directory)
         os.makedirs(path, exist_ok=True)
         convert_range_to_mp4(url, i, temp_dir, out_dir)
         frames, fixed_timestamps = get_iframes(i, duration, path, temp_dir, out_dir)
@@ -93,21 +94,26 @@ def main(url, out):
         file.write(slides_json)
         file.close()
         upload(directory + '/slides.json', temp_dir, out_dir)
-    #Change temp_dir.name to output directory (video ID)
-    file = open(temp_dir.name + '/done.txt', "x")
+    #Change temp_dir to output directory (video ID)
+    file = open(temp_dir + '/done.txt', "x")
     file.close()
     upload('done.txt', temp_dir, out_dir)
     #convert_subtitles_to_transcript(subtitles)"""
 
 def get_video_duration(url, temp_dir):
-    with open(temp_dir.name + '/vid.info.json', 'r') as f:
+    with open(temp_dir + '/vid.info.json', 'r') as f:
         info = f.read()
     info_dict = json.loads(info)
     duration = info_dict.get("duration")
     return int(duration)
 
 def get_video_info(url, temp_dir, out_dir):
-    stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir.name + '/vid" --write-info-json --cookies ' + temp_dir.name + '/cookies.txt --force-ipv4 --skip-download ' + url)
+    print("url", url)
+    cmd = ytdl_prefix + 'youtube-dlc -o "' + temp_dir + \
+        '/vid" --write-info-json --cookies ' + temp_dir + \
+        '/cookies.txt --force-ipv4 --skip-download ' + url
+    print("cmd:", cmd)
+    stream = os.popen(cmd)
     output = stream.read()
     if output == '':
         raiseError("Error getting video information.", temp_dir, out_dir)
@@ -115,7 +121,7 @@ def get_video_info(url, temp_dir, out_dir):
     return output
 
 def get_subtitles(url, temp_dir, out_dir):
-    stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir.name + '/subs" --write-auto-sub --write-sub --sub-format json3 --cookies ' + temp_dir.name + '/cookies.txt --force-ipv4 --skip-download ' + url)
+    stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir + '/subs" --write-auto-sub --write-sub --sub-format json3 --cookies ' + temp_dir + '/cookies.txt --force-ipv4 --skip-download ' + url)
     output = stream.read()
     if output == '':
         raiseError("Error getting video subtitles. Video may have no subtitles available.", temp_dir, out_dir)
@@ -124,7 +130,7 @@ def get_subtitles(url, temp_dir, out_dir):
 def convert_range_to_mp4(url, instance, temp_dir, out_dir):
     print("start downloading vid " + str(instance))
     start_time = clip_length * instance
-    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 22 -g --cookies ' + temp_dir.name + '/cookies.txt --force-ipv4 ' + url + ') -acodec copy -vcodec copy -t ' + str(clip_length) + ' ' + temp_dir.name + '/vid' + str(instance) + '.mp4')
+    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 22 -g --cookies ' + temp_dir + '/cookies.txt --force-ipv4 ' + url + ') -acodec copy -vcodec copy -t ' + str(clip_length) + ' ' + temp_dir + '/vid' + str(instance) + '.mp4')
     output = stream.read()
     if output == '':
         raiseError("Error while processing video.", temp_dir, out_dir)
@@ -149,7 +155,7 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
     second = 0
     while second < vid_length:
         hms_ts = convert_s_to_hms(start_time + second)
-        stream = os.popen('ffmpeg -loglevel quiet -ss ' + str(second) + ' -i ' + temp_dir.name + '/vid' + str(instance) + '.mp4 -s 720x480 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
+        stream = os.popen('ffmpeg -loglevel quiet -ss ' + str(second) + ' -i ' + temp_dir + '/vid' + str(instance) + '.mp4 -s 720x480 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
         output = stream.read()
         if output == '':
             raiseError("Error in finding key frames.", temp_dir, out_dir)
@@ -185,7 +191,7 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
     return frames, timestamps
 
 def get_subtitles_with_ts(temp_dir):
-    with open(temp_dir.name + '/subs.en.json3', 'r') as f:
+    with open(temp_dir + '/subs.en.json3', 'r') as f:
         subtitle_json = f.read()
     subtitle_dict = json.loads(subtitle_json)
 
@@ -287,7 +293,7 @@ def upload(file, temp_dir, out_dir):
     if host == 0:
         return
 
-    input_file = os.path.join(temp_dir.name, file)
+    input_file = os.path.join(temp_dir, file)
     output_file = os.path.join('v', out_dir, file)
 
     if host == 1:
@@ -305,14 +311,14 @@ def upload(file, temp_dir, out_dir):
 
 def get_cookies(temp_dir):
     if host == 0:
-        file = open(temp_dir.name + '/cookies.txt', "w")
+        file = open(temp_dir + '/cookies.txt', "w")
         file.write('')
         file.close()
         return True
     elif host == 1:
         print('getting cookies')
         blob = bucket.blob('cookies.txt')
-        blob.download_to_filename(temp_dir.name + '/cookies.txt')
+        blob.download_to_filename(temp_dir + '/cookies.txt')
 
         print('success')
         return True
