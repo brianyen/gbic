@@ -58,7 +58,7 @@ def main(url, out):
     temp_dir = "./temp"
     #out_dir = temp_dir
     print(temp_dir)
-    get_cookies(temp_dir)
+#    get_cookies(temp_dir)
 
     print('getting vid info', url, temp_dir, out_dir)
     get_video_info(url, temp_dir, out_dir)
