@@ -111,7 +111,7 @@ def get_video_info(url, temp_dir, out_dir):
     print("url", url)
     cmd = ytdl_prefix + 'youtube-dlc -o "' + temp_dir + \
         '/vid" --write-info-json --cookies ' + temp_dir + \
-        '/cookies.txt --force-ipv4 --skip-download ' + url
+        '/cookies.txt --skip-download ' + url
     print("cmd:", cmd)
     stream = os.popen(cmd)
     output = stream.read()
@@ -121,7 +121,7 @@ def get_video_info(url, temp_dir, out_dir):
     return output
 
 def get_subtitles(url, temp_dir, out_dir):
-    stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir + '/subs" --write-auto-sub --write-sub --sub-format json3 --cookies ' + temp_dir + '/cookies.txt --force-ipv4 --skip-download ' + url)
+    stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir + '/subs" --write-auto-sub --write-sub --sub-format json3 --cookies ' + temp_dir + '/cookies.txt --skip-download ' + url)
     output = stream.read()
     if output == '':
         raiseError("Error getting video subtitles. Video may have no subtitles available.", temp_dir, out_dir)
@@ -130,7 +130,7 @@ def get_subtitles(url, temp_dir, out_dir):
 def convert_range_to_mp4(url, instance, temp_dir, out_dir):
     print("start downloading vid " + str(instance))
     start_time = clip_length * instance
-    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 22 -g --cookies ' + temp_dir + '/cookies.txt --force-ipv4 ' + url + ') -acodec copy -vcodec copy -t ' + str(clip_length) + ' ' + temp_dir + '/vid' + str(instance) + '.mp4')
+    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 22 -g --cookies ' + temp_dir + '/cookies.txt ' + url + ') -acodec copy -vcodec copy -t ' + str(clip_length) + ' ' + temp_dir + '/vid' + str(instance) + '.mp4')
     output = stream.read()
     if output == '':
         raiseError("Error while processing video.", temp_dir, out_dir)
