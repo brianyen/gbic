@@ -129,3 +129,7 @@ dmypy.json
 .pyre/
 
 youtube-dlc
+
+ffmpeg-4.4.1-essentials_build/
+
+ffmpeg.exe
