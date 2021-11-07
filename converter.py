@@ -130,7 +130,12 @@ def get_subtitles(url, temp_dir, out_dir):
 def convert_range_to_mp4(url, instance, temp_dir, out_dir):
     print("start downloading vid " + str(instance))
     start_time = clip_length * instance
-    stream = os.popen('ffmpeg -ss ' + str(start_time) + ' -i $(' + ytdl_prefix + 'youtube-dlc -f 22 -g --cookies ' + temp_dir + '/cookies.txt ' + url + ') -acodec copy -vcodec copy -t ' + str(clip_length) + ' ' + temp_dir + '/vid' + str(instance) + '.mp4')
+    full_url = str(os.popen(ytdl_prefix + 'youtube-dlc -f 22 -g --cookies ' + temp_dir + '/cookies.txt ' + url).read()).strip()
+    print("full_url", full_url)
+    cmd = 'ffmpeg -ss ' + str(start_time) + ' -i "' + full_url + '" -acodec copy -vcodec copy -t ' + str(clip_length) + \
+        ' ' + temp_dir + '/vid' + str(instance) + '.mp4'
+    print("cmd: " + cmd)
+    stream = os.popen(cmd)
     output = stream.read()
     if output == '':
         raiseError("Error while processing video.", temp_dir, out_dir)
@@ -290,38 +295,9 @@ def add_punctuation(transcript):
 ##############################################################
 
 def upload(file, temp_dir, out_dir):
-    if host == 0:
-        return
-
-    input_file = os.path.join(temp_dir, file)
-    output_file = os.path.join('v', out_dir, file)
-
-    if host == 1:
-        # Create a new blob and upload the file's content.
-        blob = bucket.blob(output_file)
-        print('uploading ' + input_file + ' to ' + out_dir)
-        blob.upload_from_filename(input_file)
-        print('success! uploaded ' + input_file)
-
-        # The public URL can be used to directly access the uploaded file via HTTP.
-        return blob.public_url
-    else:
-        raiseError("Error: invalid host", temp_dir, out_dir)
-        return
+    return
 
 def get_cookies(temp_dir):
-    if host == 0:
-        file = open(temp_dir + '/cookies.txt', "w")
-        file.write('')
-        file.close()
-        return True
-    elif host == 1:
-        print('getting cookies')
-        blob = bucket.blob('cookies.txt')
-        blob.download_to_filename(temp_dir + '/cookies.txt')
-
-        print('success')
-        return True
     return
 
 ##############################################################
