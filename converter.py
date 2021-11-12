@@ -53,6 +53,14 @@ def raiseError(message, temp_dir, out_dir):
     #sys.exit()
 
 def main(url, out):
+    files = [f for f in os.listdir('./temp') if f != 'cookies.txt']
+    for f in files:
+        if (os.path.isfile('./temp/' + f)):
+            os.remove('./temp/' + f)
+        else:
+            shutil.rmtree('./temp/' + f) 
+
+
     out_dir = out
 #    temp_dir = tempfile.TemporaryDirectory().name
     temp_dir = "./temp"
