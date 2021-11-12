@@ -42,13 +42,14 @@ outputEl = document.getElementById("output")
 
 
 function processError(callback) {
-	fetch("https://storage.googleapis.com/www.tubeslides.net/v/" + id + "/errors.txt")
+	var fetchUrl = "http://localhost:7000/temp"
+	fetch(fetchUrl + "/errors.txt")
 	.then(function(response) {
 		if (response.ok == true) {
 			loaderEl.style.display = "none";
 			return response.json()
 		} else {
-			fetch("https://storage.googleapis.com/www.tubeslides.net/v/" + id + "/done.txt")
+			fetch(fetchUrl + "/done.txt")
 			.then(function(response) {
 				if (response.ok == true) {
 					errorsEl.innerHTML = ""
@@ -74,7 +75,7 @@ function processError(callback) {
 
 }
 function processVidInfo() {
-	fetch("https://storage.googleapis.com/www.tubeslides.net/v/" + id + "/vid.info.json")
+	fetch(fetchUrl + "/vid.info.json")
 	.then(function(response) {
 		console.log(response);
 		if (response.ok != true) {
@@ -112,7 +113,7 @@ processVidInfo()
 function processClip(i) {
 	var clip = ('0000'+i).slice(-3);
 	console.log("processClip", clip );
-    fetch("https://storage.googleapis.com/www.tubeslides.net/v/" + id + "/clip-" + clip + "/slides.json")
+    fetch(fetchUrl + "/clip-" + clip + "/slides.json")
 	.then(function(response) {
 		if (response.ok != true) {
 			processError(processClip)
