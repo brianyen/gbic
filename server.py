@@ -1,18 +1,9 @@
-from jinja2 import Template
-import json
+from flask import Flask
 
-with open('data.json') as f:
-    data = f.read()
+app = Flask(__name__)
 
-slides = json.loads(data)
+@app.route('/')
+def index():
+    return 'Web App with Python Flask!'
 
-
-with open('html.tmpl') as q:
-    html = q.read()
-
-	
-h = html
-
-t = Template(h)
-
-print(t.render(slides=slides))
+app.run(host='0.0.0.0', port=81)
