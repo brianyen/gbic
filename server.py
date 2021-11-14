@@ -1,4 +1,8 @@
 import flask
+from flask import request
+
+import re
+import urllib
 
 app = flask.Flask(__name__)
 
@@ -12,7 +16,13 @@ def view():
     
 @app.route('/go', methods = ['POST'])
 def go():
-    out_dir = "ha" 
+    print("request", request)
+    url = str(request.form.get('url'))
+    url_short = re.sub('^https?://', '', url)
+    print("url_short", url_short)
+    out_dir = urllib.parse.quote_plus(url_short)
+    out_dir = out_dir.replace("%", "-")
+
     return flask.redirect('/view.html?out_dir=' + out_dir)
     
 
