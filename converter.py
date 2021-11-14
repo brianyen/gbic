@@ -42,9 +42,6 @@ blob.upload_from_string('', content_type='application/x-www-form-urlencoded;char
 
 ##############################################################
 
-def foo():
-    print("This is me!")
-
 def raiseError(message, temp_dir, out_dir):
     file = open(temp_dir + '/error.txt', "w")
     file.write(message)
