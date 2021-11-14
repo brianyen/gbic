@@ -308,3 +308,6 @@ def get_cookies(temp_dir):
 ##############################################################
 
 #main(download_url)
+
+if __name__ == '__main__':
+    print("hello")
