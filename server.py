@@ -3,6 +3,7 @@ from flask import request
 
 import re
 import urllib
+import subprocess
 
 app = flask.Flask(__name__)
 
@@ -22,6 +23,8 @@ def go():
     print("url_short", url_short)
     out_dir = urllib.parse.quote_plus(url_short)
     out_dir = out_dir.replace("%", "-")
+
+    subprocess.Popen(['py', 'converter.py', url, out_dir])
 
     return flask.redirect('/view.html?out_dir=' + out_dir)
     

@@ -310,4 +310,8 @@ def get_cookies(temp_dir):
 #main(download_url)
 
 if __name__ == '__main__':
-    print("hello")
+    url = sys.argv[1]
+    out = sys.argv[2]
+    print("start main")
+    main(url, out)
+    print("main done")
