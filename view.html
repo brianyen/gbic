@@ -38,11 +38,11 @@ var loaderEl = document.getElementById("loader")
 var n = 0
 var errorEl = document.getElementById("error")
 
+var fetchUrl = "http://localhost:81/static"
 outputEl = document.getElementById("output")
 
 
 function processError(callback) {
-	var fetchUrl = "http://localhost:7000/temp"
 	fetch(fetchUrl + "/errors.txt")
 	.then(function(response) {
 		if (response.ok == true) {

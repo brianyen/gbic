@@ -27,6 +27,8 @@ def go():
     subprocess.Popen(['py', 'converter.py', url, out_dir])
 
     return flask.redirect('/view.html?out_dir=' + out_dir)
+
+
     
 
 app.run(host='0.0.0.0', port=81, debug=True)
