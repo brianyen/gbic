@@ -1,5 +1,6 @@
 import flask
-from flask import request
+from flask import request, send_from_directory
+
 
 import re
 import urllib
@@ -28,7 +29,8 @@ def go():
 
     return flask.redirect('/view.html?out_dir=' + out_dir)
 
-
-    
+@app.route('/v/<path:p>')
+def v(p):
+    return send_from_directory('temp', p)
 
 app.run(host='0.0.0.0', port=81, debug=True)
