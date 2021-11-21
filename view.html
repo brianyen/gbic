@@ -38,7 +38,7 @@ var loaderEl = document.getElementById("loader")
 var n = 0
 var errorEl = document.getElementById("error")
 
-var fetchUrl = "http://localhost:81/v"
+var fetchUrl = "http://localhost:81/v/" + id
 outputEl = document.getElementById("output")
 
 
@@ -130,7 +130,7 @@ function processClip(i) {
 			var time01 = slide.ts.split('-');
 			var imgSecs = (+time01[0]) * 60 * 60 + (+time01[1]) * 60 + (+time01[2]); 
 
-            var s = '<a href="' + urlFull + '&t=' + imgSecs + '"><img class="slide" src="/' + "v" + '/' + slide.png + '"></a>'
+            var s = '<a href="' + urlFull + '&t=' + imgSecs + '"><img class="slide" src="/v/' + id + '/' + slide.png + '"></a>'
 			s = s + '<div class="column">'
 
             for (let x of slide.text) {

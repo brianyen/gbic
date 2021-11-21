@@ -1,0 +1,688 @@
+[
+    {
+        "ts": "0-00-00",
+        "png": "clip-000/slide-0-00-00.png",
+        "text": [
+            {
+                "ts": "0-00-01",
+                "text": "here's the part where i think it gets"
+            },
+            {
+                "ts": "0-00-02",
+                "text": "really cool"
+            },
+            {
+                "ts": "0-00-04",
+                "text": "so i'd like to think about quad trees as"
+            },
+            {
+                "ts": "0-00-06",
+                "text": "a way of"
+            },
+            {
+                "ts": "0-00-07",
+                "text": "taking our original space and"
+            },
+            {
+                "ts": "0-00-09",
+                "text": "partitioning it"
+            },
+            {
+                "ts": "0-00-11",
+                "text": "that is each node right so for example a"
+            }
+        ]
+    },
+    {
+        "ts": "0-00-10",
+        "png": "clip-000/slide-0-00-10.png",
+        "text": [
+            {
+                "ts": "0-00-14",
+                "text": "it owns four subspaces it has a top left"
+            },
+            {
+                "ts": "0-00-16",
+                "text": "subspace"
+            },
+            {
+                "ts": "0-00-17",
+                "text": "a top right subspace bottom left and a"
+            },
+            {
+                "ts": "0-00-19",
+                "text": "bottom right and in a's case that's the"
+            },
+            {
+                "ts": "0-00-21",
+                "text": "entire universe it's the boss of"
+            },
+            {
+                "ts": "0-00-22",
+                "text": "everything"
+            },
+            {
+                "ts": "0-00-23",
+                "text": "okay so if you want to find any data you"
+            },
+            {
+                "ts": "0-00-25",
+                "text": "have to go through a"
+            },
+            {
+                "ts": "0-00-28",
+                "text": "but then it also has some subordinates"
+            },
+            {
+                "ts": "0-00-29",
+                "text": "or vassals"
+            },
+            {
+                "ts": "0-00-31",
+                "text": "so if we look here b b is the"
+            },
+            {
+                "ts": "0-00-34",
+                "text": "northeast subordinate of a and it"
+            },
+            {
+                "ts": "0-00-37",
+                "text": "controls four subspaces"
+            },
+            {
+                "ts": "0-00-38",
+                "text": "it has this one it has this big subspace"
+            },
+            {
+                "ts": "0-00-41",
+                "text": "this subspace and this subspace"
+            },
+            {
+                "ts": "0-00-43",
+                "text": "so it's not the whole universe this time"
+            },
+            {
+                "ts": "0-00-45",
+                "text": "and it of course has its own"
+            },
+            {
+                "ts": "0-00-46",
+                "text": "subordinates"
+            },
+            {
+                "ts": "0-00-47",
+                "text": "and eventually as you work your way down"
+            },
+            {
+                "ts": "0-00-49",
+                "text": "and down and down the hierarchy"
+            },
+            {
+                "ts": "0-00-51",
+                "text": "you get to for example d which controls"
+            },
+            {
+                "ts": "0-00-53",
+                "text": "four little subspaces here"
+            },
+            {
+                "ts": "0-00-55",
+                "text": "right and so if you want to look at any"
+            },
+            {
+                "ts": "0-00-57",
+                "text": "data in these four boxes"
+            },
+            {
+                "ts": "0-00-58",
+                "text": "you have to get through d to get it okay"
+            },
+            {
+                "ts": "0-01-02",
+                "text": "and what's neat about this is that the"
+            },
+            {
+                "ts": "0-01-04",
+                "text": "way that the space is divided up is that"
+            },
+            {
+                "ts": "0-01-06",
+                "text": "it's more finely divided in regions"
+            },
+            {
+                "ts": "0-01-08",
+                "text": "where there's more points"
+            },
+            {
+                "ts": "0-01-09",
+                "text": "up here to the top left of a where"
+            },
+            {
+                "ts": "0-01-10",
+                "text": "there's nothing well there's no"
+            },
+            {
+                "ts": "0-01-12",
+                "text": "subdivisions at all"
+            },
+            {
+                "ts": "0-01-13",
+                "text": "but over here where there's lots of data"
+            },
+            {
+                "ts": "0-01-15",
+                "text": "the space is finally divided"
+            },
+            {
+                "ts": "0-01-16",
+                "text": "relatively and what we'll see is that"
+            },
+            {
+                "ts": "0-01-19",
+                "text": "for common spatial operations"
+            },
+            {
+                "ts": "0-01-21",
+                "text": "like 2d rangefinding or nearest or other"
+            },
+            {
+                "ts": "0-01-23",
+                "text": "things we haven't discussed"
+            },
+            {
+                "ts": "0-01-25",
+                "text": "the runtime is often better than you"
+            },
+            {
+                "ts": "0-01-27",
+                "text": "would get out of just a"
+            },
+            {
+                "ts": "0-01-29",
+                "text": "plain old boring implementation of uh"
+            },
+            {
+                "ts": "0-01-32",
+                "text": "you know like"
+            },
+            {
+                "ts": "0-01-33",
+                "text": "iterating over all the data okay"
+            },
+            {
+                "ts": "0-01-37",
+                "text": "now let's see how this is so powerful"
+            },
+            {
+                "ts": "0-01-39",
+                "text": "when it comes to doing"
+            },
+            {
+                "ts": "0-01-40",
+                "text": "that rectangle search and the simple"
+            }
+        ]
+    },
+    {
+        "ts": "0-01-40",
+        "png": "clip-000/slide-0-01-40.png",
+        "text": [
+            {
+                "ts": "0-01-42",
+                "text": "idea is that we're going to prune"
+            },
+            {
+                "ts": "0-01-44",
+                "text": "that is not explore subspaces that don't"
+            },
+            {
+                "ts": "0-01-46",
+                "text": "intersect the query rectangle"
+            },
+            {
+                "ts": "0-01-48",
+                "text": "and here when i say the query rectangle"
+            },
+            {
+                "ts": "0-01-50",
+                "text": "i mean the green box someone wants to"
+            },
+            {
+                "ts": "0-01-52",
+                "text": "know what's in this region of space"
+            },
+            {
+                "ts": "0-01-54",
+                "text": "so maybe we're using some application"
+            },
+            {
+                "ts": "0-01-56",
+                "text": "where we're actually literally thinking"
+            },
+            {
+                "ts": "0-01-57",
+                "text": "about the sky"
+            },
+            {
+                "ts": "0-01-58",
+                "text": "and we say what are all the stars in"
+            },
+            {
+                "ts": "0-02-00",
+                "text": "this box this is a data structure you"
+            },
+            {
+                "ts": "0-02-02",
+                "text": "could use to efficiently support"
+            },
+            {
+                "ts": "0-02-04",
+                "text": "that question so let's see a little demo"
+            },
+            {
+                "ts": "0-02-06",
+                "text": "of how this would work"
+            },
+            {
+                "ts": "0-02-14",
+                "text": "all right so if we want to find"
+            }
+        ]
+    },
+    {
+        "ts": "0-02-10",
+        "png": "clip-000/slide-0-02-10.png",
+        "text": [
+            {
+                "ts": "0-02-16",
+                "text": "everything in that green rectangle we're"
+            },
+            {
+                "ts": "0-02-18",
+                "text": "going to start at the root which is a"
+            },
+            {
+                "ts": "0-02-19",
+                "text": "remember that all data is ultimately"
+            },
+            {
+                "ts": "0-02-21",
+                "text": "controlled by"
+            }
+        ]
+    },
+    {
+        "ts": "0-02-20",
+        "png": "clip-000/slide-0-02-20.png",
+        "text": [
+            {
+                "ts": "0-02-22",
+                "text": "a you have to get through a to find"
+            },
+            {
+                "ts": "0-02-24",
+                "text": "anything so we ask ourselves does"
+            },
+            {
+                "ts": "0-02-26",
+                "text": "a itself intersect the rectangle"
+            },
+            {
+                "ts": "0-02-29",
+                "text": "no it's not in the box so we're not"
+            },
+            {
+                "ts": "0-02-31",
+                "text": "going to include it in our results"
+            },
+            {
+                "ts": "0-02-33",
+                "text": "now we need to make some decisions about"
+            },
+            {
+                "ts": "0-02-35",
+                "text": "what to do next"
+            },
+            {
+                "ts": "0-02-37",
+                "text": "so there's four different neighbor or"
+            },
+            {
+                "ts": "0-02-38",
+                "text": "four different subspaces"
+            },
+            {
+                "ts": "0-02-40",
+                "text": "of a and we know that there's no way"
+            },
+            {
+                "ts": "0-02-43",
+                "text": "that the northwest"
+            },
+            {
+                "ts": "0-02-44",
+                "text": "southeast or southwest links could"
+            },
+            {
+                "ts": "0-02-46",
+                "text": "possibly contain any data"
+            },
+            {
+                "ts": "0-02-48",
+                "text": "in this rectangle because these three"
+            },
+            {
+                "ts": "0-02-50",
+                "text": "spaces do not intersect that rectangle"
+            },
+            {
+                "ts": "0-02-52",
+                "text": "so which subspaces might have good"
+            },
+            {
+                "ts": "0-02-54",
+                "text": "points only"
+            },
+            {
+                "ts": "0-02-56",
+                "text": "the northeast subspace and so what we've"
+            },
+            {
+                "ts": "0-02-58",
+                "text": "done now is pruned"
+            },
+            {
+                "ts": "0-02-59",
+                "text": "three quarters of the infinite universe"
+            },
+            {
+                "ts": "0-03-01",
+                "text": "that's pretty good"
+            }
+        ]
+    },
+    {
+        "ts": "0-03-00",
+        "png": "clip-000/slide-0-03-00.png",
+        "text": [
+            {
+                "ts": "0-03-03",
+                "text": "so now we get to b we ask ourselves is b"
+            },
+            {
+                "ts": "0-03-05",
+                "text": "in the box"
+            },
+            {
+                "ts": "0-03-07",
+                "text": "yes actually b is a point which is in"
+            },
+            {
+                "ts": "0-03-09",
+                "text": "the box so that will be included in our"
+            },
+            {
+                "ts": "0-03-10",
+                "text": "results"
+            }
+        ]
+    },
+    {
+        "ts": "0-03-10",
+        "png": "clip-000/slide-0-03-10.png",
+        "text": [
+            {
+                "ts": "0-03-12",
+                "text": "okay now we ask ourselves which subspace"
+            },
+            {
+                "ts": "0-03-15",
+                "text": "is a b"
+            },
+            {
+                "ts": "0-03-16",
+                "text": "might have good points this is a bit of"
+            },
+            {
+                "ts": "0-03-19",
+                "text": "a tricky question"
+            },
+            {
+                "ts": "0-03-20",
+                "text": "try and think about what you think the"
+            },
+            {
+                "ts": "0-03-21",
+                "text": "answer is"
+            }
+        ]
+    },
+    {
+        "ts": "0-03-20",
+        "png": "clip-000/slide-0-03-20.png",
+        "text": [
+            {
+                "ts": "0-03-24",
+                "text": "it turns out all four any of those"
+            },
+            {
+                "ts": "0-03-27",
+                "text": "points could have"
+            },
+            {
+                "ts": "0-03-28",
+                "text": "so any of those subspaces could contain"
+            },
+            {
+                "ts": "0-03-30",
+                "text": "good results why"
+            },
+            {
+                "ts": "0-03-32",
+                "text": "well because the green box intersects"
+            },
+            {
+                "ts": "0-03-34",
+                "text": "this top left"
+            },
+            {
+                "ts": "0-03-35",
+                "text": "top right bottom left and bottom right"
+            },
+            {
+                "ts": "0-03-37",
+                "text": "spaces so we have to look at all of them"
+            },
+            {
+                "ts": "0-03-39",
+                "text": "no pruning"
+            },
+            {
+                "ts": "0-03-41",
+                "text": "so first we look in the top left and we"
+            },
+            {
+                "ts": "0-03-43",
+                "text": "say oh well that's a null link right"
+            },
+            {
+                "ts": "0-03-44",
+                "text": "this one right here the north"
+            },
+            {
+                "ts": "0-03-45",
+                "text": "the northwest link it's null so we just"
+            },
+            {
+                "ts": "0-03-47",
+                "text": "return nothing to do"
+            },
+            {
+                "ts": "0-03-49",
+                "text": "then we look at the northeast lane"
+            },
+            {
+                "ts": "0-03-50",
+                "text": "nothing to do then we look at the"
+            }
+        ]
+    },
+    {
+        "ts": "0-03-50",
+        "png": "clip-000/slide-0-03-50.png",
+        "text": [
+            {
+                "ts": "0-03-51",
+                "text": "southeast link oh nothing to do"
+            },
+            {
+                "ts": "0-03-54",
+                "text": "uh and now we get to the southwest link"
+            },
+            {
+                "ts": "0-03-56",
+                "text": "and we look at c"
+            },
+            {
+                "ts": "0-03-57",
+                "text": "so question for you is c in the box no"
+            },
+            {
+                "ts": "0-04-00",
+                "text": "so we're not going to include it in our"
+            },
+            {
+                "ts": "0-04-02",
+                "text": "results of points that are in the box"
+            },
+            {
+                "ts": "0-04-04",
+                "text": "but hey maybe one of c's children could"
+            },
+            {
+                "ts": "0-04-06",
+                "text": "be on the box we don't know"
+            },
+            {
+                "ts": "0-04-08",
+                "text": "so question now which of c's subspaces"
+            },
+            {
+                "ts": "0-04-11",
+                "text": "could potentially have good points"
+            }
+        ]
+    },
+    {
+        "ts": "0-04-10",
+        "png": "clip-000/slide-0-04-10.png",
+        "text": [
+            {
+                "ts": "0-04-13",
+                "text": "top left bottom left bottom right top"
+            },
+            {
+                "ts": "0-04-15",
+                "text": "right what do you think"
+            },
+            {
+                "ts": "0-04-17",
+                "text": "in this case only the top right we know"
+            },
+            {
+                "ts": "0-04-19",
+                "text": "that northeast is the only possible"
+            },
+            {
+                "ts": "0-04-21",
+                "text": "answer and we can prune the others"
+            },
+            {
+                "ts": "0-04-22",
+                "text": "because this does not intersect or all"
+            },
+            {
+                "ts": "0-04-25",
+                "text": "three of these do not intersect the"
+            },
+            {
+                "ts": "0-04-27",
+                "text": "query rectangle we only need to look at"
+            },
+            {
+                "ts": "0-04-28",
+                "text": "the top right"
+            },
+            {
+                "ts": "0-04-29",
+                "text": "so we prune one two three more branches"
+            },
+            {
+                "ts": "0-04-32",
+                "text": "now remember this is my silly little toy"
+            },
+            {
+                "ts": "0-04-34",
+                "text": "example where there's not much data"
+            },
+            {
+                "ts": "0-04-36",
+                "text": "but there could be again many millions"
+            },
+            {
+                "ts": "0-04-37",
+                "text": "of points down here"
+            },
+            {
+                "ts": "0-04-39",
+                "text": "but because of the miracle of pruning we"
+            },
+            {
+                "ts": "0-04-41",
+                "text": "would never have to actually analyze"
+            },
+            {
+                "ts": "0-04-42",
+                "text": "them at all so finally we would look at"
+            },
+            {
+                "ts": "0-04-45",
+                "text": "this last null link"
+            },
+            {
+                "ts": "0-04-46",
+                "text": "and at that point we're totally done and"
+            },
+            {
+                "ts": "0-04-48",
+                "text": "so what we've done now"
+            },
+            {
+                "ts": "0-04-49",
+                "text": "is we've been able to efficiently"
+            },
+            {
+                "ts": "0-04-51",
+                "text": "support the"
+            }
+        ]
+    },
+    {
+        "ts": "0-04-50",
+        "png": "clip-000/slide-0-04-50.png",
+        "text": [
+            {
+                "ts": "0-04-53",
+                "text": "range search operation"
+            },
+            {
+                "ts": "0-04-57",
+                "text": "now this is a really simple in some ways"
+            },
+            {
+                "ts": "0-04-59",
+                "text": "idea"
+            }
+        ]
+    }
+]
