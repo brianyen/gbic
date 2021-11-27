@@ -13,32 +13,16 @@ import cv2
 clip_length = 300.0 #5 minutes
 max_vid_length = 7200 #2 hours
 
-#download_url = sys.argv[1]
-#out_dir = "test1"#sys.argv[2]
-ytdl_prefix = ""#sys.argv[3
+ytdl_prefix = ""
 host = 0
-#host = 0: local
-#host = 1: google cloud
-"""
-if host == 1:
-    print('version 54')
-    print('storage client')
-    gcs = storage.Client()
-    bucket = gcs.get_bucket('www.tubeslides.net')
-    print('storage client done')
-"""
+
+ytdl_cmd = "youtube-dl"
+
 #long video
 #download_url = "https://www.youtube.com/watch?v=R44tKAPpKOM"
 
 #short video
 #download_url = "https://www.youtube.com/watch?v=4rA9E2FuLkU"
-"""
-gcs_client = storage.Client(project='gbic')
-bucket = gcs_client.get_bucket('www.tubeslides.net')
-blob = bucket.blob('v/' + out_dir)
-
-blob.upload_from_string('', content_type='application/x-www-form-urlencoded;charset=UTF-8')
-"""
 
 ##############################################################
 
@@ -47,7 +31,7 @@ def raiseError(message, temp_dir, out_dir):
     file.write(message)
     file.close()
     upload('error.txt', temp_dir, out_dir)
-    #sys.exit()
+    sys.exit()
 
 def main(url, out):
     if False:
@@ -115,10 +99,10 @@ def get_video_duration(url, temp_dir):
 
 def get_video_info(url, temp_dir, out_dir):
     print("url", url)
-    cmd = ytdl_prefix + 'youtube-dlc -o "' + temp_dir + \
+    cmd = ytdl_prefix + ytdl_cmd + ' -o "' + temp_dir + \
         '/vid" --write-info-json --cookies ' + temp_dir + \
         '/cookies.txt --skip-download ' + url
-    print("cmd:", cmd)
+    print("cmd_vid_info:", cmd)
     stream = os.popen(cmd)
     output = stream.read()
     if output == '':
@@ -127,7 +111,11 @@ def get_video_info(url, temp_dir, out_dir):
     return output
 
 def get_subtitles(url, temp_dir, out_dir):
-    stream = os.popen(ytdl_prefix + 'youtube-dlc -o "' + temp_dir + '/subs" --write-auto-sub --write-sub --sub-format json3 --cookies ' + temp_dir + '/cookies.txt --skip-download ' + url)
+    cmd = ytdl_prefix + ytdl_cmd + ' -o "' + temp_dir + \
+        '/subs" --write-auto-sub --write-sub --sub-format json3 --cookies ' + \
+        temp_dir + '/cookies.txt --skip-download ' + url
+    print("cmd_subs:", cmd)
+    stream = os.popen(cmd)
     output = stream.read()
     if output == '':
         raiseError("Error getting video subtitles. Video may have no subtitles available.", temp_dir, out_dir)
@@ -136,7 +124,7 @@ def get_subtitles(url, temp_dir, out_dir):
 def convert_range_to_mp4(url, instance, temp_dir, out_dir):
     print("start downloading vid " + str(instance))
     start_time = clip_length * instance
-    full_url = str(os.popen(ytdl_prefix + 'youtube-dlc -f 22 -g --cookies ' + temp_dir + '/cookies.txt ' + url).read()).strip()
+    full_url = str(os.popen(ytdl_prefix + ytdl_cmd + ' -f 22 -g --cookies ' + temp_dir + '/cookies.txt ' + url).read()).strip()
     print("full_url", full_url)
     cmd = 'ffmpeg -ss ' + str(start_time) + ' -i "' + full_url + '" -acodec copy -vcodec copy -t ' + str(clip_length) + \
         ' ' + temp_dir + '/vid' + str(instance) + '.mp4'
