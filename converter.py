@@ -62,7 +62,7 @@ def main(url, out):
     print('getting subtitles')
     instances = math.floor(duration / clip_length) + 1
     get_subtitles(url, temp_dir, out_dir)
-    subtitles = get_subtitles_with_ts(temp_dir)
+    subtitles = get_subtitles_with_ts(temp_dir, out_dir)
     print('subtitles get')
 
     #Change temp_dir to output directory (video ID)
@@ -189,9 +189,13 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
     print(frames)
     return frames, timestamps
 
-def get_subtitles_with_ts(temp_dir):
-    with open(temp_dir + '/subs.en.json3', 'r') as f:
-        subtitle_json = f.read()
+def get_subtitles_with_ts(temp_dir, out_dir):
+    try: 
+        with open(temp_dir + '/subs.en.json3', 'r') as f:
+            subtitle_json = f.read()
+    except FileNotFoundError:
+        raiseError("Couldn't find subtitles", temp_dir, out_dir)
+    
     subtitle_dict = json.loads(subtitle_json)
 
     subtitles_with_ts = []

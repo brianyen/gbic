@@ -43,22 +43,20 @@ outputEl = document.getElementById("output")
 
 
 function processError(callback) {
-	fetch(fetchUrl + "/errors.txt")
+	fetch(fetchUrl + "/error.txt")
 	.then(function(response) {
 		if (response.ok == true) {
-			loaderEl.style.display = "none";
-			return response.json()
+			response.text().then(fillError)
+			return		
 		} else {
 			fetch(fetchUrl + "/done.txt")
 			.then(function(response) {
 				if (response.ok == true) {
-					errorsEl.innerHTML = ""
-					loaderEl.style.display = "none";
 					var finishEl = document.createElement("div")
 					finishEl.id = "finish"
 					finishEl.innerHTML = "<h1>Fin.</h1>"
 					outputEl.appendChild(finishEl)
-					console.log("finished")
+					fillError("")
 					return
 				} else {
 					errorEl.innerHTML = "We are working on converting your video right now. Please hold on!"
@@ -154,6 +152,12 @@ function processClip(i) {
 		console.log("we got an error:" + error)
 	})
 }
+function fillError(message) {
+	loaderEl.style.display = "none";
+	errorEl.innerHTML = message
+	console.log("finish")
+}
+
 processClip(n);
 
 </script>
@@ -268,5 +272,6 @@ processClip(n);
 		border: 3px solid rgb(200, 200, 200);
 	}
 }
+
 </style>
 </html>
