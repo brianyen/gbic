@@ -21,6 +21,8 @@ locally run:
 		" <numpy>
 		" <opencv-python>
 		" <ffmpeg>
+		" <os>
+		" <regex>
 
 	$ py -m pip install --upgrade youtube-dl
 	https://www.gyan.dev/ffmpeg/builds/ download ffmpeg

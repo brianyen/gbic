@@ -16,7 +16,7 @@ max_vid_length = 7200 #2 hours
 ytdl_prefix = ""
 host = 0
 
-ytdl_cmd = "youtube-dl"
+ytdl_cmd = "youtube-dlc"
 
 #long video
 #download_url = "https://www.youtube.com/watch?v=R44tKAPpKOM"
@@ -30,7 +30,6 @@ def raiseError(message, temp_dir, out_dir):
     file = open(temp_dir + '/error.txt', "w")
     file.write(message)
     file.close()
-    upload('error.txt', temp_dir, out_dir)
     sys.exit()
 
 def main(url, out):
@@ -48,7 +47,6 @@ def main(url, out):
     #out_dir = temp_dir
     print(temp_dir)
     os.makedirs(temp_dir, exist_ok=True)
-#    get_cookies(temp_dir)
 
     print('getting vid info', url, temp_dir, out_dir)
     get_video_info(url, temp_dir, out_dir)
@@ -69,7 +67,6 @@ def main(url, out):
     file = open(temp_dir + '/subtitles.json', 'w')
     file.write(str(subtitles))
     file.close()
-    upload('subtitles.json', temp_dir, out_dir)
 
     for i in range(instances):
         directory = 'clip-' + str(i).zfill(3)
@@ -83,11 +80,9 @@ def main(url, out):
         file = open(path + '/slides.json', 'w')
         file.write(slides_json)
         file.close()
-        upload(directory + '/slides.json', temp_dir, out_dir)
     #Change temp_dir to output directory (video ID)
     file = open(temp_dir + '/done.txt', "x")
     file.close()
-    upload('done.txt', temp_dir, out_dir)
     #convert_subtitles_to_transcript(subtitles)"""
 
 def get_video_duration(url, temp_dir):
@@ -107,7 +102,6 @@ def get_video_info(url, temp_dir, out_dir):
     output = stream.read()
     if output == '':
         raiseError("Error getting video information.", temp_dir, out_dir)
-    upload('vid.info.json', temp_dir, out_dir)
     return output
 
 def get_subtitles(url, temp_dir, out_dir):
@@ -132,7 +126,7 @@ def convert_range_to_mp4(url, instance, temp_dir, out_dir):
     stream = os.popen(cmd)
     output = stream.read()
     if output == '':
-        raiseError("Error while processing video.", temp_dir, out_dir)
+        raiseError("Error while converting to mp4", temp_dir, out_dir)
     print("finished downloading vid")
     return output
 
@@ -165,7 +159,6 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
     frame_name = '/slide-' + convert_s_to_hms(start_time) + '.png'
     frames.append('clip-' + str(instance).zfill(3) + frame_name)
     timestamps.append(start_time)
-    upload('clip-' + str(instance).zfill(3) + frame_name, temp_dir, out_dir)
 
     #finds i-frames by comparing all the images and reporting differences
     previous_iframe = 0
@@ -180,7 +173,6 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
             if diff > 1000.0:
                 original = contrast
                 previous_iframe = curr_frame
-                upload('clip-' + str(instance).zfill(3) + frame_name, temp_dir, out_dir)
                 timestamps.append(start_time + curr_frame)
                 frames.append('clip-' + str(instance).zfill(3) + frame_name)
         curr_frame = curr_frame + 10
@@ -292,14 +284,6 @@ def add_punctuation(transcript):
 
 ##############################################################
 
-def upload(file, temp_dir, out_dir):
-    return
-
-def get_cookies(temp_dir):
-    return
-
-##############################################################
-
 #main(download_url)
 
 if __name__ == '__main__':
@@ -308,3 +292,4 @@ if __name__ == '__main__':
     print("start main")
     main(url, out)
     print("main done")
+
