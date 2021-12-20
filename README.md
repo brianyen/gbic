@@ -7,52 +7,25 @@ The google doc...
 https://docs.google.com/document/d/1IhFaIB7Ra5CqwMpOKDzSog5JT2EmV-YC26nUo3UYTT8/edit?ts=5fc17230#
 
 ___
+locally run:
+	$ venv\Scripts\activate
+	$ server.py
 
-personal NOTE: pip install = py -m pip install
+-download Python 3
+-create venv
+	$ py -m venv venv
+-pip install modules (in venv)
+	$ py -m pip install <MODULE NAME>
+		" <flask>
+		" <opencv-python>
+		" <numpy>
+		" <opencv-python>
+		" <ffmpeg>
 
-IGNORE: py server.py > output.html (in gbic folder) to update
+	$ py -m pip install --upgrade youtube-dl
+	https://www.gyan.dev/ffmpeg/builds/ download ffmpeg
+		unzip in 'gbic' dir and copy "ffmpeg(.exe)" into 'gbic' dir
 
-PUSHING FILES TO GOOGLE CLOUD STORAGE:
-
-	(in google cloud shell)
-	gsutil cp [location] gs://[bucket name]/
-	ex:
-		gsutil cp index.html gs://www.tubeslides.net/
-		gsutil cp view.html gs://www.tubeslides.net/
-
-personal NOTE: cd .. => go up by a directory
-
-PUSHING FUNCTIONS TO GOOGLE CLOUD FUNCTIONS:
-
-	(in google cloud shell)
-	gcloud functions deploy convert_url --runtime python38 --trigger-http --memory 2048MB --allow-unauthenticated
-
-personal NOTE:
-
-	py -m venv env
-
-SETTING UP LOCAL HOST:
-
-	NOTE: two separate command shells
-	NOTE: be in correct directory
-
-	1.
-	.\env\Scripts\activate ((in both shells))
-	
-	pip3 install jinja2
-	pip3 install -r requirements.txt
-
-	2.
-	functions-framework --target convert_url --debug
-		NOTE: need to install functions-framework if haven't yet
-
-	3. 
-	py -m http.server
-		NOTE: in 2nd shell
-
-	NOTE:
-	^index.html in localhost:8000
-	^main.py in localhost:8080
 
 CORS
 
