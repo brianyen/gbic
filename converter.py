@@ -9,6 +9,7 @@ import datetime
 import sys
 import numpy as np
 import cv2
+import subprocess
 
 clip_length = 300.0 #5 minutes
 max_vid_length = 7200 #2 hours
@@ -120,13 +121,19 @@ def convert_range_to_mp4(url, instance, temp_dir, out_dir):
     start_time = clip_length * instance
     full_url = str(os.popen(ytdl_prefix + ytdl_cmd + ' -f 22 -g --cookies ' + temp_dir + '/cookies.txt ' + url).read()).strip()
     print("full_url", full_url)
-    cmd = 'ffmpeg -ss ' + str(start_time) + ' -i "' + full_url + '" -acodec copy -vcodec copy -t ' + str(clip_length) + \
-        ' ' + temp_dir + '/vid' + str(instance) + '.mp4'
-    print("cmd: " + cmd)
-    stream = os.popen(cmd)
-    output = stream.read()
-    if output == '':
+    cmd = ['ffmpeg', '-ss', str(start_time), '-i', full_url, '-acodec', 'copy', '-vcodec', 'copy', '-t', str(clip_length), 
+        temp_dir + '/vid' + str(instance) + '.mp4']
+    print("cmd:", cmd)
+    try: 
+        res = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    except OSError:
+        print("error: popen")
+        exit(-1)
+    res.wait()
+    if res.returncode != 0:
         raiseError("Error while converting to mp4", temp_dir, out_dir)
+    output = res.stdout.read()
+
     print("finished downloading vid")
     return output
 
@@ -281,6 +288,8 @@ def add_punctuation(transcript):
     fastpunct = FastPunct('en')
     return fastpunct.punct([transcript], batch_size=32)
     #return fastpunct.punct([transcript], batch_size=32)
+
+
 
 ##############################################################
 
