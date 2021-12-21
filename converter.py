@@ -34,18 +34,12 @@ def raiseError(message, temp_dir, out_dir):
     sys.exit()
 
 def main(url, out):
-    if False:
-        files = [f for f in os.listdir('./static') if f != 'cookies.txt']
-        for f in files:
-            if (os.path.isfile('./static/' + f)):
-                os.remove('./static/' + f)
-            else:
-                shutil.rmtree('./static/' + f) 
-
     out_dir = out
-#    temp_dir = tempfile.TemporaryDirectory().name
     temp_dir = "./temp/" + out_dir
-    #out_dir = temp_dir
+    try:
+        shutil.rmtree(temp_dir)
+    except FileNotFoundError:
+        pass
     print(temp_dir)
     os.makedirs(temp_dir, exist_ok=True)
 
@@ -121,21 +115,10 @@ def convert_range_to_mp4(url, instance, temp_dir, out_dir):
     start_time = clip_length * instance
     full_url = str(os.popen(ytdl_prefix + ytdl_cmd + ' -f 22 -g --cookies ' + temp_dir + '/cookies.txt ' + url).read()).strip()
     print("full_url", full_url)
-    cmd = ['ffmpeg', '-ss', str(start_time), '-i', full_url, '-acodec', 'copy', '-vcodec', 'copy', '-t', str(clip_length), 
-        temp_dir + '/vid' + str(instance) + '.mp4']
+    cmd = ['ffmpeg', '-ss', str(start_time), '-i', str(full_url), '-acodec', 'copy', '-vcodec', 'copy', '-t', str(clip_length), 
+        str(temp_dir) + '/vid' + str(instance) + '.mp4']
     print("cmd:", cmd)
-    try: 
-        res = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-    except OSError:
-        print("error: popen")
-        exit(-1)
-    res.wait()
-    if res.returncode != 0:
-        raiseError("Error while converting to mp4", temp_dir, out_dir)
-    output = res.stdout.read()
-
-    print("finished downloading vid")
-    return output
+    return ffmpeg_open(cmd, "Error while converting to mp4", "finished downloading vid", temp_dir, out_dir)
 
 def get_iframes(instance, duration, path, temp_dir, out_dir):
     min_frame_diff = 5
@@ -155,12 +138,12 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
     second = 0
     while second < vid_length:
         hms_ts = convert_s_to_hms(start_time + second)
-        stream = os.popen('ffmpeg -loglevel quiet -ss ' + str(second) + ' -i ' + temp_dir + '/vid' + str(instance) + '.mp4 -s 720x480 -c:v png -frames:v 1 "' + path + '/slide-' + hms_ts + '.png"')
-        output = stream.read()
-        if output == '':
-            raiseError("Error in finding key frames.", temp_dir, out_dir)
+        cmd = ['ffmpeg', '-loglevel', 'quiet', '-ss', str(second), '-i', str(temp_dir) + '/vid' + str(instance) + '.mp4',
+            '-s', '720x480', '-c:v', 'png', '-frames:v', '1', str(path) + '/slide-' + str(hms_ts) + '.png"']
+        print("cmd_iframes", cmd)
+
+        ffmpeg_open(cmd, "Error in finding key frames.", "key frame got", temp_dir, out_dir)
         second = second + 10
-        print(second)
 
     #uploads and gathers info for first frame
     frame_name = '/slide-' + convert_s_to_hms(start_time) + '.png'
@@ -274,6 +257,21 @@ def mse(imageA, imageB):
 
     return err
 
+def ffmpeg_open(command, err_msg, fin_msg, temp_dir, out_dir):
+    try: 
+        res = subprocess.Popen(command, stdout=subprocess.PIPE)
+    except OSError:
+        print("error: popen")
+        exit(-1)
+    res.wait()
+    if res.returncode != 0:
+        print("res:", res, res.returncode)
+        raiseError(err_msg, temp_dir, out_dir)
+    output = res.stdout.read()
+    print(fin_msg)
+    return output
+    
+
 ##############################################################
 
 def convert_subtitles_to_transcript(subtitles):
@@ -287,13 +285,8 @@ def convert_subtitles_to_transcript(subtitles):
 def add_punctuation(transcript):
     fastpunct = FastPunct('en')
     return fastpunct.punct([transcript], batch_size=32)
-    #return fastpunct.punct([transcript], batch_size=32)
-
-
 
 ##############################################################
-
-#main(download_url)
 
 if __name__ == '__main__':
     url = sys.argv[1]
