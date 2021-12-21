@@ -138,8 +138,9 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
     second = 0
     while second < vid_length:
         hms_ts = convert_s_to_hms(start_time + second)
+        print(path)
         cmd = ['ffmpeg', '-loglevel', 'quiet', '-ss', str(second), '-i', str(temp_dir) + '/vid' + str(instance) + '.mp4',
-            '-s', '720x480', '-c:v', 'png', '-frames:v', '1', str(path) + '/slide-' + str(hms_ts) + '.png"']
+            '-s', '720x480', '-c:v', 'png', '-frames:v', '1', str(path) + '/slide-' + str(hms_ts) + '.png']
         print("cmd_iframes", cmd)
 
         ffmpeg_open(cmd, "Error in finding key frames.", "key frame got", temp_dir, out_dir)
