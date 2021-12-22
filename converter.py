@@ -34,7 +34,12 @@ def raiseError(message, temp_dir, out_dir):
 def progress(message, temp_dir, out_dir):
     print("progress:", message, temp_dir, out_dir)
     file = open(temp_dir + '/progress.txt', "w")
-    file.write(message)
+    try: 
+        temp = message.split()
+        if temp[0] == "frame=":
+            file.write(temp[1] + " " + temp[3])
+    except IndexError:
+        file.write(message)
     file.close()
 
 def main(url, out_dir):
@@ -275,7 +280,7 @@ def ffmpeg_open(command, err_msg, fin_msg, temp_dir, out_dir):
     stderr = iter(res.stderr.readline, b"")
     line_last = None
     for line in stderr:
-        print("stderr line:", line)
+        progress(line, temp_dir, out_dir)
         if line == "" and line == line_last:
             break
         line_last = line        
