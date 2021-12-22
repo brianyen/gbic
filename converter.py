@@ -267,13 +267,18 @@ def mse(imageA, imageB):
 
 def ffmpeg_open(command, err_msg, fin_msg, temp_dir, out_dir):
     try: 
-        res = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, text=True)
+        res = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     except OSError:
         print("error: popen")
         exit(-1)
+
     stderr = iter(res.stderr.readline, b"")
+    line_last = None
     for line in stderr:
         print("stderr line:", line)
+        if line == "" and line == line_last:
+            break
+        line_last = line        
 
     res.wait()
     if res.returncode != 0:
