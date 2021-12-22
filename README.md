@@ -27,13 +27,3 @@ locally run:
 	$ py -m pip install --upgrade youtube-dl
 	https://www.gyan.dev/ffmpeg/builds/ download ffmpeg
 		unzip in 'gbic' dir and copy "ffmpeg(.exe)" into 'gbic' dir
-
-
-CORS
-
-	gsutil cors set CORS.json gs://www.tubeslides.net
-	gsutil cors get gs://www.tubeslides.net
-	
-RUNNING converter_local.py
-
-	python3 converter_local.py <Youtube URL> <OUTPUT DIRECTORY> <PREFIX TO ACCESS YOUTUBE-DL>
