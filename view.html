@@ -65,7 +65,8 @@ function processProgress() {
 		}
 		var remSec = Math.round((totalSec*30 - p[0])/p[1])
 		console.log(remSec)
-		minutes = remSec % 60
+		minutes = Math.floor(remSec/60)
+		console.log("minutes: " + minutes)
 		remSec -= minutes * 60
 		var minEstimate = ""
 		if (minutes > 0) {
