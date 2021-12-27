@@ -10,7 +10,7 @@ app = flask.Flask(__name__)
 
 @app.route('/')
 def index():
-    return flask.send_file('index.html')
+    return flask.send_file('view.html')
 
 @app.route('/view.html')
 def view():

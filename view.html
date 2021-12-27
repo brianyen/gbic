@@ -30,7 +30,11 @@
 </body>
 <script>
 const urlParams = new URLSearchParams(window.location.search);
-const id = urlParams.get('out_dir');
+var id = urlParams.get('out_dir');
+if (id == null) {
+	id = "www.youtube.com-2Fwatch-3Fv-3D0ICWVnoFUTM"
+}
+
 var urlFull
 var keepTrying = true
 var progressEl = document.getElementById("progress")
@@ -38,7 +42,6 @@ var loaderEl = document.getElementById("loader")
 var n = 0
 var errorEl = document.getElementById("error")
 var totalSec = 0
-
 
 var fetchUrl = "http://localhost:81/v/" + id
 outputEl = document.getElementById("output")
