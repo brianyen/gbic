@@ -47,12 +47,10 @@ def main(url, out_dir):
     try:
         for file in os.scandir(temp_dir):
             if file.name == "keep.txt":
-                raise UnboundLocalError()
+                sys.exit()
 
         shutil.rmtree(temp_dir)
     except FileNotFoundError:
-        pass
-    except UnboundLocalError:
         pass
 
     print(temp_dir)
