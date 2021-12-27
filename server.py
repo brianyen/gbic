@@ -4,8 +4,7 @@ from flask import request, send_from_directory
 import re
 import urllib
 import subprocess
-
-progress = {}
+import sys
 
 app = flask.Flask(__name__)
 
@@ -31,15 +30,12 @@ def go():
     # spawn a child thread, which reads the stdout from converter.py
     # and then updates the global progress dict, like...
     #  progress[out_dir] = 130
+    #  del progress[out_dir]
 
     return flask.redirect('/view.html?out_dir=' + out_dir)
 
 @app.route('/v/<path:p>')
 def v(p):
     return send_from_directory('temp', p)
-
-@app.route('/progress/<string:v>')
-def progress(v):
-    return progress[v]
 
 app.run(host='0.0.0.0', port=81, debug=True)

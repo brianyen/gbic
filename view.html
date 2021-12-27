@@ -6,17 +6,14 @@
 
 <div style="display: flex">
 	<div id="metadata">
-		<div id="m-url"></div>
+		<form id="form" action="/go" method="post">
+			<input id="url" name="url"></input>
+			<input type="submit" value="Go">
+		</form>
         <div id="m-title"></div>
 		<div id="m-creator"></div>
 		<div id="m-length"></div>
 		<div id="description"></div>	
-	</div>
-	<div id="search">
-		<form id="form" action="/convert_url">
-			<input id="input" name="url"></input>
-			<input type="submit" value="Go">
-		</form>
 	</div>
 </div>
 
@@ -63,7 +60,7 @@ function processProgress() {
 			progressEl.innerHTML = ""
 			return
 		}
-		var remSec = Math.round((totalSec*30 - p[0])/p[1])
+		var remSec = Math.round((totalSec*30 - p[0] - n * 9000)/p[1])
 		console.log(remSec)
 		minutes = Math.floor(remSec/60)
 		console.log("minutes: " + minutes)
@@ -72,7 +69,7 @@ function processProgress() {
 		if (minutes > 0) {
 			minEstimate = minutes + " minutes and "
 		}
-		progressEl.innerHTML = "We are working on processing your video. Estimated " + minEstimate + remSec + " seconds left"
+		progressEl.innerHTML = "We are working on processing your video. Estimated " + minEstimate + remSec + " seconds left."
 	});
 };
 
@@ -117,7 +114,7 @@ function processVidInfo() {
 	})
 	.then(function(data) {
 		console.log(data)
-		var url = document.getElementById("m-url")
+		var url = document.getElementById("url")
 		var title = document.getElementById("m-title")
 		var creator = document.getElementById("m-creator")
 		var length = document.getElementById("m-length")
@@ -130,7 +127,7 @@ function processVidInfo() {
 		date.setSeconds(data.duration);
 		var timeString = date.toISOString().substr(11, 8);
 
-		url.innerHTML = '<b>Video URL: </b> <a href="' + data.webpage_url + '">' + data.webpage_url + '</a>'
+		url.value = data.webpage_url
 		title.innerHTML = '<b>Title: </b>' + data.fulltitle
 		creator.innerHTML = '<b>Creator: </b>' + data.uploader
 		length.innerHTML = '<b>Video Length: </b>' + timeString
@@ -216,9 +213,6 @@ processClip(n);
 	margin: 20px;
 	width: 25%;
 }
-#input {
-	width: 80%;
-}
 #metadata, #error {
 	padding: 0.5%;
 	margin-left: 5%;
@@ -229,11 +223,20 @@ processClip(n);
 	word-wrap: break-word;
 	overflow-x: hidden;
 }
+#url {
+	width: 60%;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	color: rgb(30, 25, 90);
+	height: 75%;
+}
 #description {
 	font-size: 75%;
 }
 #form {
 	display: flex;
+	padding: 0px;
+	margin-bottom: 0.5%;
+	border-bottom: 0px;
 }
 .bar {
 	border-top: 3px solid rgb(200, 200, 200);

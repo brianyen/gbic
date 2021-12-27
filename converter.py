@@ -45,8 +45,14 @@ def progress(message, temp_dir, out_dir):
 def main(url, out_dir):
     temp_dir = "./temp/" + out_dir
     try:
+        for file in os.scandir(temp_dir):
+            if file.name == "keep.txt":
+                raise UnboundLocalError()
+
         shutil.rmtree(temp_dir)
     except FileNotFoundError:
+        pass
+    except UnboundLocalError:
         pass
 
     print(temp_dir)
@@ -189,7 +195,7 @@ def get_subtitles_with_ts(temp_dir, out_dir):
         with open(temp_dir + '/subs.en.json3', 'r') as f:
             subtitle_json = f.read()
     except FileNotFoundError:
-        raiseError("Couldn't find subtitles", temp_dir, out_dir)
+        raiseError("We couldn't find any subtitles on this video. Perhaps the video doesn't have subtitles?", temp_dir, out_dir)
     
     subtitle_dict = json.loads(subtitle_json)
 
@@ -279,11 +285,14 @@ def ffmpeg_open(command, err_msg, fin_msg, temp_dir, out_dir):
 
     stderr = iter(res.stderr.readline, b"")
     line_last = None
+    it = 0
     for line in stderr:
-        progress(line, temp_dir, out_dir)
+        if it % 15 == 0:
+            progress(line, temp_dir, out_dir)
         if line == "" and line == line_last:
             break
-        line_last = line        
+        line_last = line
+        it += 1        
 
     res.wait()
     if res.returncode != 0:
