@@ -10,7 +10,7 @@
 			<input id="url" name="url"></input>
 			<input type="submit" value="Go">
 		</form>
-        <div id="m-title"></div>
+        <div id="m-title" href=""></div>
 		<div id="m-creator"></div>
 		<div id="m-length"></div>
 		<div id="description"></div>	
@@ -34,6 +34,12 @@ var id = urlParams.get('out_dir');
 if (id == null) {
 	id = "www.youtube.com-2Fwatch-3Fv-3D0ICWVnoFUTM"
 }
+var originalUrl = decodeURIComponent(urlParams.get('url'));
+if (originalUrl == null) {
+	originalUrl == "https://www.youtube.com/watch?v=0ICWVnoFUTM"
+}
+var url = document.getElementById("url")
+url.value = originalUrl
 
 var urlFull
 var keepTrying = true
@@ -117,7 +123,6 @@ function processVidInfo() {
 	})
 	.then(function(data) {
 		console.log(data)
-		var url = document.getElementById("url")
 		var title = document.getElementById("m-title")
 		var creator = document.getElementById("m-creator")
 		var length = document.getElementById("m-length")
@@ -131,7 +136,7 @@ function processVidInfo() {
 		var timeString = date.toISOString().substr(11, 8);
 
 		url.value = data.webpage_url
-		title.innerHTML = '<b>Title: </b>' + data.fulltitle
+		title.innerHTML = '<a href=' + data.webpage_url + '><b>Title: </b>' + data.fulltitle + '</a>'
 		creator.innerHTML = '<b>Creator: </b>' + data.uploader
 		length.innerHTML = '<b>Video Length: </b>' + timeString
 		description.innerHTML = "<b>Description</b>: " + data.description

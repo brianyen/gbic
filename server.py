@@ -32,7 +32,7 @@ def go():
     #  progress[out_dir] = 130
     #  del progress[out_dir]
 
-    return flask.redirect('/view.html?out_dir=' + out_dir)
+    return flask.redirect('/view.html?out_dir=' + out_dir + '&url=' + urllib.parse.quote(url, safe='~()*!.\''))
 
 @app.route('/v/<path:p>')
 def v(p):
