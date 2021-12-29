@@ -1,6 +1,6 @@
 # gbic first
 
-The gbic project is here.
+The gbic project is here!
 
 The google doc...
 
