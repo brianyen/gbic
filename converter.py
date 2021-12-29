@@ -66,7 +66,7 @@ def main(url, out_dir):
     print('duration:' + str(duration))
 
     print('getting subtitles')
-    instances = math.floor(duration / clip_length) + 1
+    num_clips = math.floor(duration / clip_length) + 1
     get_subtitles(url, temp_dir, out_dir)
     subtitles = get_subtitles_with_ts(temp_dir, out_dir)
     print('subtitles get')
@@ -76,7 +76,7 @@ def main(url, out_dir):
     file.write(str(subtitles))
     file.close()
 
-    for i in range(instances):
+    for i in range(num_clips):
         directory = 'clip-' + str(i).zfill(3)
         #Change temp_dir to output directory (video ID)
         path = os.path.join(temp_dir, directory)
@@ -144,8 +144,8 @@ def get_iframes(instance, duration, path, temp_dir, out_dir):
     start_time = instance * clip_length
 
     #finds the length of the clip current instance is on
-    total_instances = math.floor(duration / clip_length) + 1
-    if instance < total_instances - 1:
+    num_clips = math.floor(duration / clip_length) + 1
+    if instance < num_clips - 1:
         vid_length = clip_length
     else:
         vid_length = duration % clip_length

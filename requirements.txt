@@ -1,6 +1,5 @@
 youtube-dlc
 flask
-scikit-image
 opencv-python
 numpy
 regex
