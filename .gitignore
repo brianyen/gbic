@@ -136,3 +136,5 @@ ffmpeg.exe
 
 temp
 
+*.pem
+
