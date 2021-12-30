@@ -19,11 +19,20 @@ locally run:
 		" <flask>
 		" <opencv-python>
 		" <numpy>
-		" <opencv-python>
 		" <ffmpeg>
-		" <os>
 		" <regex>
 
-	$ py -m pip install --upgrade youtube-dl
+	$ py -m pip install --upgrade youtube-dlc
+		add to path
+
 	https://www.gyan.dev/ffmpeg/builds/ download ffmpeg
 		unzip in 'gbic' dir and copy "ffmpeg(.exe)" into 'gbic' dir
+
+	ffmpeg.exe -> linux: https://gist.github.com/willmasters/382fe6caba44a4345a3de95d98d3aae5
+
+	note: depending on OS might need to install libGL
+
+Linking 'py' to 'python3' (for linux)
+	$ cd
+	$ cd /usr/bin/
+	$ ln -s /usr/bin/python3 py
