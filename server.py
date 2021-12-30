@@ -38,4 +38,4 @@ def go():
 def v(p):
     return send_from_directory('temp', p)
 
-app.run(host='0.0.0.0', port=81, debug=True)
+app.run(host='0.0.0.0', port=80, debug=True)
