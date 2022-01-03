@@ -21,3 +21,6 @@ RUN python3.9 -m pip install --upgrade setuptools
 RUN git clone https://github.com/brianyen/gbic.git && \
     cd gbic && \
     python3.9 -m pip install -r requirements.txt
+
+CMD cd gbic && \ 
+    py server.py

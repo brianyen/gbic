@@ -36,3 +36,5 @@ Linking 'py' to 'python3' (for linux)
 	$ cd
 	$ cd /usr/bin/
 	$ ln -s /usr/bin/python3 py
+
+docker build -t hello-world .
