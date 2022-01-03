@@ -38,3 +38,8 @@ Linking 'py' to 'python3' (for linux)
 	$ ln -s /usr/bin/python3 py
 
 docker build -t hello-world .
+
+Docker:
+locally     $ docker push (name)
+on ec2 instance -   $ docker pull (name)
+					$ docker run -p 80:80 (name)
