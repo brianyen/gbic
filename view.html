@@ -7,9 +7,9 @@
 <div style="display: flex">
 	<div id="metadata">
 		<form id="form" action="/go" method="post">
-			<label for="url">Enter a Youtube URL to convert into slides
+			<label for="url">Enter a Youtube URL to convert into slides...
 				<input id="url" name="url"></input>	
-				<input type="submit" value="Convert">
+				<input id="submit" type="submit" value="Convert!">
 			</label>
 		</form>
 		<div class="disclaimer">
@@ -26,7 +26,7 @@
 </div>
 
 
-<div id="error"></div>
+<div id="error" style="margin-bottom: 30px"></div>
 
 <div id="output"></div> 
 
@@ -87,7 +87,7 @@ function processProgress() {
 		if (minutes > 0) {
 			minEstimate = minutes + " minutes and "
 		}
-		progressEl.innerHTML = "We are working on processing your video. Estimated " + minEstimate + remSec + " seconds left."
+		progressEl.innerHTML = "Estimated " + minEstimate + remSec + " seconds left."
 	});
 };
 
@@ -223,7 +223,7 @@ processClip(n);
 	text-align: center;
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 	padding: 1px;
-	font-size: 12px;
+	font-size: 16px;
 }
 #metadata, #error {
 	padding: 0.5%;
@@ -234,6 +234,9 @@ processClip(n);
 	width: 90%;
 	word-wrap: break-word;
 	overflow-x: hidden;
+}
+#output {
+	margin-left: 5%;
 }
 #url {
 	width: 80%;
@@ -249,6 +252,10 @@ processClip(n);
 	padding: 0px;
 	margin-bottom: 0.5%;
 	border-bottom: 0px;
+}
+#submit {
+	font-family: inherit;
+	font-size: 20px;
 }
 .disclaimer {
 	font-size: 13px;
@@ -301,7 +308,7 @@ processClip(n);
 	font-size: 150%;
 	text-align: center;
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-	color: black;
+	color: rgb(30, 25, 90);
 }
 #loader {
   border: 16px solid #e0d9d9; 
@@ -326,10 +333,9 @@ processClip(n);
 		width: 50%;
 	}
 	.slide {
-		width: 80%;
+		width: 90%;
 		top: 20px;
-		margin: 5%;
-		margin-top: 0px;
+		margin-left: 8px;
 		border: 3px solid rgb(200, 200, 200);
 	}
 }
