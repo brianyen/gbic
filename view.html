@@ -7,17 +7,24 @@
 <div style="display: flex">
 	<div id="metadata">
 		<form id="form" action="/go" method="post">
-			<input id="url" name="url"></input>
-			<input type="submit" value="Go">
+			<label for="url">Enter a Youtube URL to convert into slides
+				<input id="url" name="url"></input>	
+				<input type="submit" value="Convert">
+			</label>
 		</form>
+		<div class="disclaimer">
+			Converting a video into slides may take a while, 
+			since we're running it on a cheap server.
+		</div>
+		<div class="bar"></div>
         <div id="m-title" href=""></div>
 		<div id="m-creator"></div>
 		<div id="m-length"></div>
-		<div id="description"></div>	
+		<div id="description"></div>		
+	<div class="bar"></div>
 	</div>
 </div>
 
-<div class="bar" style="margin-top: 0px"></div>
 
 <div id="error"></div>
 
@@ -40,6 +47,8 @@ if (originalUrl == null) {
 }
 var url = document.getElementById("url")
 url.value = originalUrl
+url.focus()
+url.select()
 
 var urlFull
 var keepTrying = true
@@ -214,12 +223,7 @@ processClip(n);
 	text-align: center;
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 	padding: 1px;
-	font-size: 25px;
-}
-#search {
-	text-align: right;
-	margin: 20px;
-	width: 25%;
+	font-size: 12px;
 }
 #metadata, #error {
 	padding: 0.5%;
@@ -227,15 +231,15 @@ processClip(n);
 	font-size: 150%;
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 	color: rgb(30, 25, 90);
-	width: 75%;
+	width: 90%;
 	word-wrap: break-word;
 	overflow-x: hidden;
 }
 #url {
-	width: 60%;
+	width: 80%;
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 	color: rgb(30, 25, 90);
-	height: 75%;
+	margin: 10px, 10px, 10px, 0px;
 }
 #description {
 	font-size: 75%;
@@ -246,10 +250,14 @@ processClip(n);
 	margin-bottom: 0.5%;
 	border-bottom: 0px;
 }
+.disclaimer {
+	font-size: 13px;
+}
 .bar {
 	border-top: 3px solid rgb(200, 200, 200);
 	padding: 0px;
-	margin: 50px;
+	margin: 25px;
+	margin-left: 0px;
 	height: 0px;
 }
 .group {
