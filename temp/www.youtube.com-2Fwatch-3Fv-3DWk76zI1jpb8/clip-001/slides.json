@@ -1,0 +1,506 @@
+[
+    {
+        "ts": "0-05-00",
+        "png": "clip-001/slide-0-05-00.png",
+        "text": [
+            {
+                "ts": "0-05-00",
+                "text": "x squared plus two x plus four"
+            },
+            {
+                "ts": "0-05-03",
+                "text": "the denominator factors to x minus two"
+            },
+            {
+                "ts": "0-05-06",
+                "text": "times x minus three we can cancel out"
+            },
+            {
+                "ts": "0-05-10",
+                "text": "the x minus twos and the numerator and"
+            },
+            {
+                "ts": "0-05-12",
+                "text": "denominator"
+            },
+            {
+                "ts": "0-05-13",
+                "text": "those do not affect my asymptotes later"
+            },
+            {
+                "ts": "0-05-16",
+                "text": "we will learn that those give us the"
+            },
+            {
+                "ts": "0-05-18",
+                "text": "holes or the removable discontinuity but"
+            },
+            {
+                "ts": "0-05-21",
+                "text": "what's left over will help us figure out"
+            },
+            {
+                "ts": "0-05-23",
+                "text": "our asymptotes"
+            },
+            {
+                "ts": "0-05-24",
+                "text": "remember the vertical asymptotes you"
+            },
+            {
+                "ts": "0-05-26",
+                "text": "have to simplify first"
+            },
+            {
+                "ts": "0-05-27",
+                "text": "and we did that and then set what's"
+            },
+            {
+                "ts": "0-05-29",
+                "text": "remaining"
+            },
+            {
+                "ts": "0-05-30",
+                "text": "in the denominator equal to zero so my"
+            },
+            {
+                "ts": "0-05-33",
+                "text": "vertical asymptote i'm going to say"
+            },
+            {
+                "ts": "0-05-35",
+                "text": "x minus three equals zero so then my"
+            },
+            {
+                "ts": "0-05-38",
+                "text": "vertical asymptote is"
+            },
+            {
+                "ts": "0-05-39",
+                "text": "x equals three so now i'm going to find"
+            },
+            {
+                "ts": "0-05-43",
+                "text": "my non-vertical asymptotes by doing the"
+            }
+        ]
+    },
+    {
+        "ts": "0-05-40",
+        "png": "clip-001/slide-0-05-40.png",
+        "text": [
+            {
+                "ts": "0-05-45",
+                "text": "long division i'm going to take"
+            },
+            {
+                "ts": "0-05-47",
+                "text": "my denominator and divide it into my"
+            },
+            {
+                "ts": "0-05-49",
+                "text": "numerator so we have x minus three"
+            },
+            {
+                "ts": "0-05-51",
+                "text": "divided into x squared plus 2x plus 4."
+            },
+            {
+                "ts": "0-05-55",
+                "text": "first we want to look at the x and the x"
+            },
+            {
+                "ts": "0-05-57",
+                "text": "squared"
+            },
+            {
+                "ts": "0-05-58",
+                "text": "x times x is x squared so above its like"
+            },
+            {
+                "ts": "0-06-01",
+                "text": "term of 2x i'm going to write the x"
+            },
+            {
+                "ts": "0-06-05",
+                "text": "now i'm going to multiply x minus 3"
+            },
+            {
+                "ts": "0-06-07",
+                "text": "times x"
+            },
+            {
+                "ts": "0-06-08",
+                "text": "and we get x squared minus 3x"
+            },
+            {
+                "ts": "0-06-12",
+                "text": "now i'm going to subtract i'm going to"
+            },
+            {
+                "ts": "0-06-14",
+                "text": "put it in parentheses first"
+            },
+            {
+                "ts": "0-06-16",
+                "text": "and we have 2x minus negative 3x that's"
+            },
+            {
+                "ts": "0-06-19",
+                "text": "really 2x plus 3x so it's 5x"
+            },
+            {
+                "ts": "0-06-24",
+                "text": "and then x squared minus x squared is 0."
+            },
+            {
+                "ts": "0-06-26",
+                "text": "now i'm going to bring down"
+            },
+            {
+                "ts": "0-06-27",
+                "text": "the next number 4 and start over again x"
+            },
+            {
+                "ts": "0-06-30",
+                "text": "goes into 5x five times i'm going to"
+            },
+            {
+                "ts": "0-06-32",
+                "text": "write plus 5"
+            },
+            {
+                "ts": "0-06-33",
+                "text": "up here now i'm going to multiply x"
+            },
+            {
+                "ts": "0-06-36",
+                "text": "minus 3 times positive 5"
+            },
+            {
+                "ts": "0-06-38",
+                "text": "and we get 5x minus 15. now i'm going to"
+            },
+            {
+                "ts": "0-06-41",
+                "text": "subtract"
+            }
+        ]
+    },
+    {
+        "ts": "0-06-40",
+        "png": "clip-001/slide-0-06-40.png",
+        "text": [
+            {
+                "ts": "0-06-43",
+                "text": "make sure you distribute that negative"
+            },
+            {
+                "ts": "0-06-44",
+                "text": "and we end up with 4"
+            },
+            {
+                "ts": "0-06-46",
+                "text": "minus negative 15 which is really 4 plus"
+            },
+            {
+                "ts": "0-06-48",
+                "text": "15 so my remainder is 19."
+            },
+            {
+                "ts": "0-06-51",
+                "text": "remember your non-vertical asymptote is"
+            },
+            {
+                "ts": "0-06-54",
+                "text": "just your quotient with y"
+            },
+            {
+                "ts": "0-06-56",
+                "text": "equals so this time it's going to be an"
+            },
+            {
+                "ts": "0-06-58",
+                "text": "oblique or a slant asymptote and it's y"
+            },
+            {
+                "ts": "0-07-00",
+                "text": "equals x plus 5."
+            }
+        ]
+    },
+    {
+        "ts": "0-07-00",
+        "png": "clip-001/slide-0-07-00.png",
+        "text": [
+            {
+                "ts": "0-07-07",
+                "text": "here's example c first thing i'm going"
+            },
+            {
+                "ts": "0-07-09",
+                "text": "to do is factor the denominator"
+            },
+            {
+                "ts": "0-07-11",
+                "text": "the denominator is a difference of"
+            }
+        ]
+    },
+    {
+        "ts": "0-07-10",
+        "png": "clip-001/slide-0-07-10.png",
+        "text": [
+            {
+                "ts": "0-07-13",
+                "text": "squared and it factors"
+            },
+            {
+                "ts": "0-07-14",
+                "text": "to x squared plus 1 times x squared"
+            },
+            {
+                "ts": "0-07-17",
+                "text": "minus 1. now x squared minus 1 is also a"
+            },
+            {
+                "ts": "0-07-20",
+                "text": "difference of squares so we can keep"
+            },
+            {
+                "ts": "0-07-22",
+                "text": "factoring so the x"
+            },
+            {
+                "ts": "0-07-23",
+                "text": "squared plus 1 cannot be factored"
+            },
+            {
+                "ts": "0-07-25",
+                "text": "anymore but x"
+            },
+            {
+                "ts": "0-07-26",
+                "text": "squared plus 1 factors to x plus 1 x"
+            },
+            {
+                "ts": "0-07-29",
+                "text": "minus 1."
+            },
+            {
+                "ts": "0-07-30",
+                "text": "to find the vertical asymptotes we need"
+            },
+            {
+                "ts": "0-07-32",
+                "text": "to take each of the factors"
+            },
+            {
+                "ts": "0-07-34",
+                "text": "in the denominator and set them equal to"
+            },
+            {
+                "ts": "0-07-36",
+                "text": "0."
+            },
+            {
+                "ts": "0-07-37",
+                "text": "if we take x squared plus 1 and set that"
+            },
+            {
+                "ts": "0-07-40",
+                "text": "equal to 0"
+            },
+            {
+                "ts": "0-07-41",
+                "text": "you will see that it is impossible for x"
+            },
+            {
+                "ts": "0-07-44",
+                "text": "squared plus one"
+            },
+            {
+                "ts": "0-07-44",
+                "text": "to be equal to zero you can't square"
+            },
+            {
+                "ts": "0-07-46",
+                "text": "something and then"
+            },
+            {
+                "ts": "0-07-48",
+                "text": "add a positive number to it and expect"
+            },
+            {
+                "ts": "0-07-50",
+                "text": "it to equal zero"
+            },
+            {
+                "ts": "0-07-51",
+                "text": "so x squared plus one does not yield any"
+            },
+            {
+                "ts": "0-07-53",
+                "text": "vertical asymptotes"
+            },
+            {
+                "ts": "0-07-55",
+                "text": "x plus one if we set that equal to zero"
+            },
+            {
+                "ts": "0-07-57",
+                "text": "we get x"
+            },
+            {
+                "ts": "0-07-58",
+                "text": "equals negative one and if we set x"
+            },
+            {
+                "ts": "0-08-00",
+                "text": "minus one equal to zero we get x"
+            },
+            {
+                "ts": "0-08-02",
+                "text": "equals positive one so we have two"
+            },
+            {
+                "ts": "0-08-05",
+                "text": "vertical asymptotes"
+            },
+            {
+                "ts": "0-08-06",
+                "text": "one at x equals positive one and one at"
+            },
+            {
+                "ts": "0-08-09",
+                "text": "x equals"
+            },
+            {
+                "ts": "0-08-09",
+                "text": "negative one now we want to find the"
+            },
+            {
+                "ts": "0-08-13",
+                "text": "non-vertical asymptote"
+            }
+        ]
+    },
+    {
+        "ts": "0-08-10",
+        "png": "clip-001/slide-0-08-10.png",
+        "text": [
+            {
+                "ts": "0-08-15",
+                "text": "we need to do this using long division"
+            },
+            {
+                "ts": "0-08-17",
+                "text": "since we factored everything out"
+            },
+            {
+                "ts": "0-08-19",
+                "text": "and nothing canceled we actually want to"
+            },
+            {
+                "ts": "0-08-21",
+                "text": "use the original"
+            },
+            {
+                "ts": "0-08-22",
+                "text": "function multiplied out to do the long"
+            },
+            {
+                "ts": "0-08-24",
+                "text": "division you can't do the long division"
+            },
+            {
+                "ts": "0-08-26",
+                "text": "with all the factors"
+            },
+            {
+                "ts": "0-08-27",
+                "text": "so i'm going to take my original"
+            },
+            {
+                "ts": "0-08-29",
+                "text": "function and divide x"
+            },
+            {
+                "ts": "0-08-31",
+                "text": "to the fourth minus 1 into x to the"
+            },
+            {
+                "ts": "0-08-33",
+                "text": "third and use a bunch of placeholders so"
+            },
+            {
+                "ts": "0-08-35",
+                "text": "say x to the third"
+            },
+            {
+                "ts": "0-08-37",
+                "text": "plus 0x squared plus 0x"
+            },
+            {
+                "ts": "0-08-40",
+                "text": "plus 0. so you want to look at your"
+            },
+            {
+                "ts": "0-08-42",
+                "text": "leading term x to the fourth"
+            },
+            {
+                "ts": "0-08-44",
+                "text": "and think how many times does that go"
+            },
+            {
+                "ts": "0-08-45",
+                "text": "into x to the third well it's actually"
+            },
+            {
+                "ts": "0-08-48",
+                "text": "zero"
+            },
+            {
+                "ts": "0-08-48",
+                "text": "because x to the fourth has a higher"
+            },
+            {
+                "ts": "0-08-50",
+                "text": "degree than x to the third"
+            },
+            {
+                "ts": "0-08-52",
+                "text": "it goes in zero times and if we were to"
+            },
+            {
+                "ts": "0-08-54",
+                "text": "multiply the whole thing by zero"
+            },
+            {
+                "ts": "0-08-56",
+                "text": "we would end up with the original"
+            },
+            {
+                "ts": "0-08-58",
+                "text": "function"
+            },
+            {
+                "ts": "0-08-59",
+                "text": "so my horizontal asymptote is y equals"
+            },
+            {
+                "ts": "0-09-02",
+                "text": "zero"
+            },
+            {
+                "ts": "0-09-04",
+                "text": "and that's it for these notes check"
+            },
+            {
+                "ts": "0-09-06",
+                "text": "canvas for your corresponding assignment"
+            }
+        ]
+    }
+]

@@ -1,0 +1,640 @@
+[
+    {
+        "ts": "0-00-00",
+        "png": "clip-000/slide-0-00-00.png",
+        "text": [
+            {
+                "ts": "0-00-02",
+                "text": "notes cover pages 1 and 2 of your"
+            },
+            {
+                "ts": "0-00-04",
+                "text": "chapter 4 notes"
+            },
+            {
+                "ts": "0-00-05",
+                "text": "and it's section 4.2 properties"
+            },
+            {
+                "ts": "0-00-07",
+                "text": "irrational functions"
+            },
+            {
+                "ts": "0-00-09",
+                "text": "a rational function is a function of the"
+            },
+            {
+                "ts": "0-00-11",
+                "text": "form r of x"
+            },
+            {
+                "ts": "0-00-13",
+                "text": "equals p of x over q of x where p and q"
+            },
+            {
+                "ts": "0-00-16",
+                "text": "are polynomial functions and q"
+            },
+            {
+                "ts": "0-00-18",
+                "text": "is not the zero polynomial the domain of"
+            },
+            {
+                "ts": "0-00-20",
+                "text": "a rational function"
+            },
+            {
+                "ts": "0-00-21",
+                "text": "is the set of all real numbers except"
+            },
+            {
+                "ts": "0-00-23",
+                "text": "those for which the denominator is zero"
+            },
+            {
+                "ts": "0-00-26",
+                "text": "remember that a rational number is"
+            },
+            {
+                "ts": "0-00-28",
+                "text": "really just a fraction"
+            },
+            {
+                "ts": "0-00-29",
+                "text": "a rational number is a ratio of two"
+            },
+            {
+                "ts": "0-00-32",
+                "text": "integers"
+            },
+            {
+                "ts": "0-00-33",
+                "text": "so a rational function is just a ratio"
+            },
+            {
+                "ts": "0-00-36",
+                "text": "of two polynomial functions here we see"
+            },
+            {
+                "ts": "0-00-40",
+                "text": "the inverse variation and the inverse"
+            },
+            {
+                "ts": "0-00-42",
+                "text": "square variation"
+            }
+        ]
+    },
+    {
+        "ts": "0-00-40",
+        "png": "clip-000/slide-0-00-40.png",
+        "text": [
+            {
+                "ts": "0-00-43",
+                "text": "these are some rational functions you"
+            },
+            {
+                "ts": "0-00-44",
+                "text": "might be familiar with and a lot of our"
+            },
+            {
+                "ts": "0-00-46",
+                "text": "graphs will be based on this but have"
+            },
+            {
+                "ts": "0-00-49",
+                "text": "lots of transformations so now we're"
+            },
+            {
+                "ts": "0-00-51",
+                "text": "going to talk about asymptotes"
+            },
+            {
+                "ts": "0-00-52",
+                "text": "an asymptote is a straight line"
+            },
+            {
+                "ts": "0-00-54",
+                "text": "approached by a given curve as one of"
+            },
+            {
+                "ts": "0-00-56",
+                "text": "the variables in the equation"
+            },
+            {
+                "ts": "0-00-58",
+                "text": "of the curve approaches infinity so"
+            },
+            {
+                "ts": "0-01-01",
+                "text": "asymptotes can tell you what happens"
+            }
+        ]
+    },
+    {
+        "ts": "0-01-00",
+        "png": "clip-000/slide-0-01-00.png",
+        "text": [
+            {
+                "ts": "0-01-03",
+                "text": "at the far extremes like negative"
+            },
+            {
+                "ts": "0-01-05",
+                "text": "infinity and positive infinity"
+            },
+            {
+                "ts": "0-01-07",
+                "text": "and then the next word is oblique and"
+            },
+            {
+                "ts": "0-01-09",
+                "text": "that is neither perpendicular nor"
+            },
+            {
+                "ts": "0-01-10",
+                "text": "parallel to a given line or"
+            },
+            {
+                "ts": "0-01-12",
+                "text": "surface slanting sloping usually we call"
+            },
+            {
+                "ts": "0-01-15",
+                "text": "them slant asymptotes"
+            },
+            {
+                "ts": "0-01-16",
+                "text": "but we're also going to use the word"
+            },
+            {
+                "ts": "0-01-18",
+                "text": "oblique"
+            },
+            {
+                "ts": "0-01-21",
+                "text": "here's example one it says use the graph"
+            }
+        ]
+    },
+    {
+        "ts": "0-01-20",
+        "png": "clip-000/slide-0-01-20.png",
+        "text": [
+            {
+                "ts": "0-01-24",
+                "text": "to find the horizontal"
+            },
+            {
+                "ts": "0-01-25",
+                "text": "vertical and oblique asymptotes if any"
+            },
+            {
+                "ts": "0-01-28",
+                "text": "so horizontal"
+            },
+            {
+                "ts": "0-01-29",
+                "text": "i can see right away by looking at this"
+            },
+            {
+                "ts": "0-01-31",
+                "text": "graph it has a horizontal asymptote"
+            },
+            {
+                "ts": "0-01-33",
+                "text": "and this asymptote goes through the line"
+            },
+            {
+                "ts": "0-01-35",
+                "text": "y equals 3."
+            },
+            {
+                "ts": "0-01-37",
+                "text": "so i'm going to write that down the"
+            },
+            {
+                "ts": "0-01-38",
+                "text": "horizontal asymptote is y equals three"
+            },
+            {
+                "ts": "0-01-40",
+                "text": "now vertical i see two vertical"
+            },
+            {
+                "ts": "0-01-42",
+                "text": "asymptotes i'm gonna name them from left"
+            },
+            {
+                "ts": "0-01-45",
+                "text": "to right the first one"
+            },
+            {
+                "ts": "0-01-46",
+                "text": "is x equals negative four and the second"
+            },
+            {
+                "ts": "0-01-49",
+                "text": "one"
+            },
+            {
+                "ts": "0-01-49",
+                "text": "is x equals three and then i can also"
+            },
+            {
+                "ts": "0-01-53",
+                "text": "see there are no oblique asymptotes"
+            },
+            {
+                "ts": "0-01-55",
+                "text": "just so you know if there's a horizontal"
+            },
+            {
+                "ts": "0-01-57",
+                "text": "asymptote you're not going to have an"
+            },
+            {
+                "ts": "0-01-58",
+                "text": "oblique asymptote and vice versa"
+            },
+            {
+                "ts": "0-02-02",
+                "text": "here's example b hopefully you can see"
+            },
+            {
+                "ts": "0-02-04",
+                "text": "right off the bat that there is an"
+            },
+            {
+                "ts": "0-02-05",
+                "text": "oblique asymptote it's the slanted line"
+            },
+            {
+                "ts": "0-02-07",
+                "text": "right here there's also"
+            },
+            {
+                "ts": "0-02-09",
+                "text": "two vertical asymptotes one at x equals"
+            },
+            {
+                "ts": "0-02-12",
+                "text": "zero"
+            }
+        ]
+    },
+    {
+        "ts": "0-02-10",
+        "png": "clip-000/slide-0-02-10.png",
+        "text": [
+            {
+                "ts": "0-02-12",
+                "text": "and one at x equals four the zero one"
+            },
+            {
+                "ts": "0-02-16",
+                "text": "you can tell"
+            },
+            {
+                "ts": "0-02-17",
+                "text": "because these two lines on either side"
+            },
+            {
+                "ts": "0-02-18",
+                "text": "are getting really close to the y"
+            },
+            {
+                "ts": "0-02-20",
+                "text": "axis but they never touch it and i can"
+            },
+            {
+                "ts": "0-02-22",
+                "text": "see that there is no horizontal"
+            },
+            {
+                "ts": "0-02-24",
+                "text": "asymptote"
+            },
+            {
+                "ts": "0-02-29",
+                "text": "the oblique one is a little harder to"
+            },
+            {
+                "ts": "0-02-30",
+                "text": "figure out the equation but we can do it"
+            },
+            {
+                "ts": "0-02-32",
+                "text": "hopefully you see that it has a"
+            },
+            {
+                "ts": "0-02-33",
+                "text": "y-intercept of two"
+            },
+            {
+                "ts": "0-02-35",
+                "text": "now we just need to figure out the slope"
+            },
+            {
+                "ts": "0-02-37",
+                "text": "see this point right here at negative"
+            },
+            {
+                "ts": "0-02-39",
+                "text": "one zero"
+            },
+            {
+                "ts": "0-02-40",
+                "text": "from here you go up two to the right one"
+            },
+            {
+                "ts": "0-02-42",
+                "text": "because this is"
+            },
+            {
+                "ts": "0-02-44",
+                "text": "the y-axis is scaled by twos and the"
+            },
+            {
+                "ts": "0-02-46",
+                "text": "x-axis is scaled by ones"
+            },
+            {
+                "ts": "0-02-48",
+                "text": "so the slope is up two to the right one"
+            },
+            {
+                "ts": "0-02-51",
+                "text": "so the equation of that line is y equals"
+            },
+            {
+                "ts": "0-02-54",
+                "text": "two"
+            },
+            {
+                "ts": "0-02-54",
+                "text": "x plus two"
+            },
+            {
+                "ts": "0-02-58",
+                "text": "example two says find the vertical"
+            },
+            {
+                "ts": "0-03-00",
+                "text": "horizontal and oblique asymptotes at any"
+            },
+            {
+                "ts": "0-03-02",
+                "text": "of each rational function so it's just"
+            }
+        ]
+    },
+    {
+        "ts": "0-03-00",
+        "png": "clip-000/slide-0-03-00.png",
+        "text": [
+            {
+                "ts": "0-03-04",
+                "text": "like example one but instead this time"
+            },
+            {
+                "ts": "0-03-06",
+                "text": "we're given"
+            },
+            {
+                "ts": "0-03-07",
+                "text": "the function instead of the graph so we"
+            },
+            {
+                "ts": "0-03-10",
+                "text": "can find vertical asymptotes by"
+            },
+            {
+                "ts": "0-03-11",
+                "text": "simplifying first"
+            },
+            {
+                "ts": "0-03-13",
+                "text": "and then setting the denominator equal"
+            },
+            {
+                "ts": "0-03-14",
+                "text": "to zero"
+            },
+            {
+                "ts": "0-03-16",
+                "text": "and we can find the non-vertical"
+            },
+            {
+                "ts": "0-03-17",
+                "text": "asymptotes by using long division"
+            },
+            {
+                "ts": "0-03-20",
+                "text": "so first let's find the vertical"
+            },
+            {
+                "ts": "0-03-22",
+                "text": "asymptotes there's nothing i can do to"
+            },
+            {
+                "ts": "0-03-24",
+                "text": "simplify this"
+            },
+            {
+                "ts": "0-03-25",
+                "text": "so i'm just going to take my denominator"
+            },
+            {
+                "ts": "0-03-27",
+                "text": "and set it equal to zero"
+            },
+            {
+                "ts": "0-03-29",
+                "text": "so my vertical asymptote is x equals"
+            },
+            {
+                "ts": "0-03-31",
+                "text": "negative 4."
+            },
+            {
+                "ts": "0-03-32",
+                "text": "notice this would actually be the domain"
+            },
+            {
+                "ts": "0-03-35",
+                "text": "but the opposite the domain would be"
+            },
+            {
+                "ts": "0-03-36",
+                "text": "x cannot equal negative 4 that's why"
+            },
+            {
+                "ts": "0-03-39",
+                "text": "there will be an asymptote there at x"
+            },
+            {
+                "ts": "0-03-41",
+                "text": "equals negative 4. now for the"
+            },
+            {
+                "ts": "0-03-42",
+                "text": "non-vertical asymptotes"
+            },
+            {
+                "ts": "0-03-44",
+                "text": "in this one it's going to be either"
+            },
+            {
+                "ts": "0-03-45",
+                "text": "horizontal or oblique we're going to do"
+            },
+            {
+                "ts": "0-03-47",
+                "text": "the long division"
+            },
+            {
+                "ts": "0-03-48",
+                "text": "remember that a fraction bar means"
+            },
+            {
+                "ts": "0-03-50",
+                "text": "divide so we're going to do 3x"
+            },
+            {
+                "ts": "0-03-52",
+                "text": "divided by x plus 4."
+            },
+            {
+                "ts": "0-03-56",
+                "text": "so i'm going to divide x plus 4 into 3x"
+            },
+            {
+                "ts": "0-03-59",
+                "text": "i'm going to write plus 0 as a"
+            },
+            {
+                "ts": "0-04-00",
+                "text": "placeholder and then i want to think"
+            },
+            {
+                "ts": "0-04-03",
+                "text": "how many times does x go into 3x and"
+            },
+            {
+                "ts": "0-04-05",
+                "text": "that's 3 so i'm going to put a 3 above"
+            },
+            {
+                "ts": "0-04-07",
+                "text": "the 0."
+            },
+            {
+                "ts": "0-04-09",
+                "text": "and now i'm going to multiply x plus 4"
+            },
+            {
+                "ts": "0-04-12",
+                "text": "times 3"
+            },
+            {
+                "ts": "0-04-13",
+                "text": "and we get 3x plus 12."
+            },
+            {
+                "ts": "0-04-16",
+                "text": "now i'm going to subtract i like to put"
+            },
+            {
+                "ts": "0-04-18",
+                "text": "it in parentheses"
+            },
+            {
+                "ts": "0-04-20",
+                "text": "to make sure you subtract everything so"
+            },
+            {
+                "ts": "0-04-22",
+                "text": "0 minus positive 12 is negative 12"
+            },
+            {
+                "ts": "0-04-25",
+                "text": "and then 3x minus 3x is 0. so my"
+            },
+            {
+                "ts": "0-04-28",
+                "text": "remainder is negative 12."
+            },
+            {
+                "ts": "0-04-30",
+                "text": "to get my non-vertical asymptote it's"
+            },
+            {
+                "ts": "0-04-32",
+                "text": "just y equals"
+            },
+            {
+                "ts": "0-04-34",
+                "text": "the quotient don't include the remainder"
+            },
+            {
+                "ts": "0-04-36",
+                "text": "for your non-vertical asymptote so it's"
+            },
+            {
+                "ts": "0-04-38",
+                "text": "y"
+            },
+            {
+                "ts": "0-04-38",
+                "text": "equals 3 and we can see that's a"
+            },
+            {
+                "ts": "0-04-40",
+                "text": "horizontal asymptote"
+            },
+            {
+                "ts": "0-04-43",
+                "text": "so here's example b before we can find"
+            },
+            {
+                "ts": "0-04-45",
+                "text": "the asymptotes we need to simplify it"
+            },
+            {
+                "ts": "0-04-47",
+                "text": "and what we're going to do first is"
+            },
+            {
+                "ts": "0-04-48",
+                "text": "factor the numerator and denominator"
+            },
+            {
+                "ts": "0-04-50",
+                "text": "i see that the numerator is a difference"
+            }
+        ]
+    },
+    {
+        "ts": "0-04-50",
+        "png": "clip-000/slide-0-04-50.png",
+        "text": [
+            {
+                "ts": "0-04-52",
+                "text": "of cubes so i need to factor that using"
+            },
+            {
+                "ts": "0-04-54",
+                "text": "my difference of cubes pattern"
+            },
+            {
+                "ts": "0-04-56",
+                "text": "so the numerator factors to x minus two"
+            },
+            {
+                "ts": "0-04-59",
+                "text": "times the trinomial"
+            }
+        ]
+    }
+]
