@@ -49,8 +49,6 @@ def main(url, out_dir):
         for file in os.scandir(temp_dir):
             if file.name == "keep.txt":
                 sys.exit()
-
-#        shutil.rmtree(temp_dir)
     except FileNotFoundError:
         pass
 
@@ -58,7 +56,10 @@ def main(url, out_dir):
     try: 
         os.makedirs(temp_dir, exist_ok=False)
     except FileExistsError:
-        sys.exit()
+        for file in os.scandir(temp_dir):
+            if file.name == "done.txt":
+                sys.exit()
+        shutil.rmtree(temp_dir)
 
     progress(f'getting vid info {url}', temp_dir, out_dir)
     get_video_info(url, temp_dir, out_dir)
@@ -97,6 +98,10 @@ def main(url, out_dir):
     #Change temp_dir to output directory (video ID)
     file = open(temp_dir + '/done.txt', "x")
     file.close()
+
+    for file in os.scandir(temp_dir):
+        if file.name.endswith(".mp4"):
+            os.remove(temp_dir + '/' + file.name)
     
     #convert_subtitles_to_transcript(subtitles)"""
 
