@@ -148,8 +148,9 @@ function processVidInfo() {
 		title.innerHTML = '<a href=' + data.webpage_url + '><b>Title: </b>' + data.fulltitle + '</a>'
 		creator.innerHTML = '<b>Creator: </b>' + data.uploader
 		length.innerHTML = '<b>Video Length: </b>' + timeString
-		description.innerHTML = "<b>Description</b>: " + data.description
-		
+		if (data.description != "") {
+			description.innerHTML = "<b>Description</b>: " + data.description
+		}
 	})
 	.catch((error) => {
 			console.log("we got an error:" + error)
