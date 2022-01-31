@@ -44,17 +44,21 @@ def progress(message, temp_dir, out_dir):
 
 def main(url, out_dir):
     temp_dir = "./temp/" + out_dir
+    
     try:
         for file in os.scandir(temp_dir):
             if file.name == "keep.txt":
                 sys.exit()
 
-        shutil.rmtree(temp_dir)
+#        shutil.rmtree(temp_dir)
     except FileNotFoundError:
         pass
 
     print(temp_dir)
-    os.makedirs(temp_dir, exist_ok=True)
+    try: 
+        os.makedirs(temp_dir, exist_ok=False)
+    except FileExistsError:
+        sys.exit()
 
     progress(f'getting vid info {url}', temp_dir, out_dir)
     get_video_info(url, temp_dir, out_dir)
