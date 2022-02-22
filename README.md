@@ -43,3 +43,8 @@ Docker:
 locally     $ docker push (name)
 on ec2 instance -   $ docker pull (name)
 					$ docker run -p 80:80 (name)
+
+Updating inside:
+	docker exec -t -i (container name) bash
+	cd \gbic
+	git pull
